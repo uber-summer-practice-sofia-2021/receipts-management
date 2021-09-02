@@ -1,1 +1,1 @@
-# receipts-management
+# courier-test
