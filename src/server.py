@@ -2,7 +2,7 @@ import os
 import requests
 from flask import Flask, request, render_template, url_for, json, Response
 
-server = Flask(__name__,  template_folder="resources/templates")
+server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
 
 @server.route("/message-queue")
 def hello():
