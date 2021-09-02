@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  server:
+    container_name: courier-test-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app
+    ports:
+      - target: 8000
+        published: 8000
+        protocol: tcp
+    environment:
+      - FLASK_APP=courier-test.py
+      - FLASK_ENV=development
