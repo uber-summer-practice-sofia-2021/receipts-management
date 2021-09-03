@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   server:
-    container_name: orders-test-server
+    container_name: orders
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,3 +14,7 @@ services:
     environment:
       - FLASK_APP=orders.py
       - FLASK_ENV=development
+
+networks:
+  default:
+    name: receipt-net

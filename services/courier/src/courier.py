@@ -14,7 +14,7 @@ def hello():
 def sendTripInfo():
   file = {"tripID":"trip"}
   server.logger.debug(file)
-  requests.post("http://172.24.0.1:5000/receive_trip_id", json = file)
+  requests.post("http://receipts:5000/receive_trip_id", json = file)
   return jsonify(file)
 
 if __name__ == "__main__":
