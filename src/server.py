@@ -33,7 +33,7 @@ urls = ["localhost:8000/get_trip_info", "localhost:5000/get_order_info"]
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
   tripID = request.get_json()
-  #response_from_courier = requests.post("http://localhost:8000/get_trip_info", json=tripID)
+  response_from_courier = requests.post("http://localhost:8000/get_trip_info", json=tripID)
 
   server.logger.debug(response_from_courier.json()['orderId'])
 
