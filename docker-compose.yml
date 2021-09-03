@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  server:
+  courier_server:
     container_name: python_devserver
     build:
       context: .
@@ -14,3 +14,5 @@ services:
     environment:
       - FLASK_APP=server.py
       - FLASK_ENV=development
+    links:
+      - "courier-test-server"
