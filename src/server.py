@@ -1,5 +1,6 @@
 import os
 import requests
+from controllers.controller import Controller
 from flask import Flask, request, render_template, url_for, json, Response
 
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
@@ -12,22 +13,9 @@ def hello():
 def user():
   return render_template("index.html")
 
-@server.route("/<string:trip>", methods = ['GET'])
-def receipt_request(trip):
-  username = request.args.get('name')
-  return f'Hello {username}!'
 
-#Simulates order API interacting with us
-@server.route("/get_order_info", methods=["POST"])
-def getOrderInfo():
-  #server.logger.debug(request.json)
-
-  json_url = os.path.join(server.root_path, "fixtures", "order.json")
-  order_info = json.load(open(json_url))
-
-  return Response(json.dumps(order_info), mimetype='application/json')
-
-urls = ["localhost:8000/get_trip_info", "localhost:5000/get_order_info"]
+# controller
+myController = Controller()#Missing one argument path to config/HTTPClients.json
 
 #Main function
 @server.route("/receive_trip_id", methods = ['POST'])
