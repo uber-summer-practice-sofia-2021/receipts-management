@@ -10,8 +10,8 @@ RUN pip install -r requirements.txt
 
 COPY src/ .
 
-EXPOSE 8000
+EXPOSE 9000
 ENV FLASK_ENV=development
-ENV FLASK_APP=courier.py
+ENV FLASK_APP=orders.py
 
-CMD ["flask", "run", "--port=8000", "--host=0.0.0.0"]
+CMD ["flask", "run", "--port=9000", "--host=0.0.0.0"]

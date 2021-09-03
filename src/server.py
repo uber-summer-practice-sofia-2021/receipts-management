@@ -32,13 +32,8 @@ urls = ["localhost:8000/get_trip_info", "localhost:5000/get_order_info"]
 #Main function
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
-  #WORKS ONLY IN POST MODE!
   tripID = request.get_json()
-  #server.logger.debug(tripID)
-
-  response_from_courier = requests.post("http://localhost:8000/get_trip_info", json=tripID)
-
-  #response_from_order = requests.post("http://localhost:?000/get_order_info", json=response_from_courier.json()['orderId'])
+  #response_from_courier = requests.post("http://localhost:8000/get_trip_info", json=tripID)
 
   server.logger.debug(response_from_courier.json()['orderId'])
 
