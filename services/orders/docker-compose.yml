@@ -12,5 +12,5 @@ services:
         published: 9000
         protocol: tcp
     environment:
-      - FLASK_APP=orders-test.py
+      - FLASK_APP=orders.py
       - FLASK_ENV=development
