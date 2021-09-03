@@ -17,16 +17,6 @@ def receipt_request(trip):
   username = request.args.get('name')
   return f'Hello {username}!'
 
-#Simulates courier API interacting with us
-@server.route("/get_trip_info", methods=["POST"])
-def getTripInfo():
-  #server.logger.debug(request.json)
-
-  json_url = os.path.join(server.root_path, "fixtures", "tripInfo.json")
-  trip_info = json.load(open(json_url))
-
-  return Response(json.dumps(trip_info), mimetype='application/json')
-
 #Simulates order API interacting with us
 @server.route("/get_order_info", methods=["POST"])
 def getOrderInfo():
@@ -37,21 +27,26 @@ def getOrderInfo():
 
   return Response(json.dumps(order_info), mimetype='application/json')
 
-urls = ["localhost:5000/get_trip_info", "localhost:5000/get_order_info"]
+urls = ["localhost:8000/get_trip_info", "localhost:5000/get_order_info"]
 
 #Main function
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
-  order = request.json
-  server.logger.debug(order)
+  #WORKS ONLY IN POST MODE!
+  tripID = request.get_json()
+  #server.logger.debug(tripID)
 
-  #response = requests.post(urls[0], data=order)
+  response_from_courier = requests.post("http://localhost:8000/get_trip_info", json=tripID)
 
-  #server.logger.debug(response)
+  #response_from_order = requests.post("http://localhost:?000/get_order_info", json=response_from_courier.json()['orderId'])
+
+  server.logger.debug(response_from_courier.json()['orderId'])
+
+  #server.logger.debug(response.json())
 
   #response.raise_for_status()
   
-  return "Successfully Received"
+  return response_from_courier.json()
   
 
 if __name__ == "__main__":

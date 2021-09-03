@@ -1,4 +1,7 @@
-from flask import Flask, request
+import os
+import json
+from flask import Flask, request, Response,  jsonify
+import requests
 
 server = Flask(__name__)
 
@@ -6,10 +9,17 @@ server = Flask(__name__)
 def hello():
   return "Hello World!"
 
-@server.route("/hello")
-def personalised_hello():
-  username = request.args.get('user')
-  return f'Hello {username}!'
+#Simulates courier API interacting with us
+@server.route("/get_trip_info", methods=["POST", "GET"])
+def getTripInfo():
+  if request.method == "POST":
+    server.logger.debug(request.json)
+
+  json_url = os.path.join(server.root_path, "fixtures", "tripInfo.json")
+  trip_info = json.load(open(json_url))
+
+  #return Response(json.dumps(trip_info), mimetype='application/json')
+  return trip_info
 
 if __name__ == "__main__":
    server.run(host='0.0.0.0')
