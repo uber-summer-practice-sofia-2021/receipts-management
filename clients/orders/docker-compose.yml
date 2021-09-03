@@ -1,16 +1,16 @@
 version: '3.7'
 services:
   server:
-    container_name: courier-test-server
+    container_name: orders-test-server
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
       - ./src:/app
     ports:
-      - target: 8000
-        published: 8000
+      - target: 9000
+        published: 9000
         protocol: tcp
     environment:
-      - FLASK_APP=courier.py
+      - FLASK_APP=orders-test.py
       - FLASK_ENV=development
