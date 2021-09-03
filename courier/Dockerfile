@@ -14,4 +14,4 @@ EXPOSE 8000
 ENV FLASK_ENV=development
 ENV FLASK_APP=courier-test.py
 
-CMD ["flask", "run", "--port=8000", "--host=0.0.0.0"]
+CMD ["flask", "run", "--port=8000"]
