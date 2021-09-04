@@ -1,14 +1,13 @@
 import os
 import requests
 from controllers.controller import Controller
-from flask import Flask, request, render_template, url_for, json, Response
+from flask import Flask, request, render_template, url_for, json, Response, jsonify
 
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
 
 def saveTrip(tripId):
   try:
     file = open("fixtures/trips/" + tripId + ".json", 'x')
-    file.write(tripId)
     server.logger.debug(file)
   except:
     server.logger.debug("File already exists")
@@ -32,10 +31,16 @@ myController = Controller(configPath + "/config/HTTPClients.json")#Missing one a
 def receiveTripId():
   tripID = request.json
   tripID = tripID['tripID']
-  server.logger.debug(tripID)
   saveTrip(tripID)
+  requests.post("http://couriers:8000/get_trip_info", json = tripID)
   return "Successfully received"
   
+@server.route("/get_trip_info", methods = ['POST'])
+def receiveWholeTrip():
+  wholeTrip = request.json
+  server.logger.debug(wholeTrip)
+  return "Successfully Received"
+
 
 if __name__ == "__main__":
    server.run(host='0.0.0.0')
