@@ -5,6 +5,15 @@ from flask import Flask, request, render_template, url_for, json, Response
 
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
 
+def saveTrip(tripId):
+  try:
+    file = open("fixtures/trips/" + tripId + ".json", 'x')
+    file.write(tripId)
+    server.logger.debug(file)
+  except:
+    server.logger.debug("File already exists")
+
+
 @server.route("/message-queue")
 def hello():
   return "Hello World!"
@@ -22,8 +31,10 @@ myController = Controller(configPath + "/config/HTTPClients.json")#Missing one a
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
   tripID = request.json
+  tripID = tripID['tripID']
   server.logger.debug(tripID)
-  return tripID
+  saveTrip(tripID)
+  return "Successfully received"
   
 
 if __name__ == "__main__":
