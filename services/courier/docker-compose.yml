@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   server:
-    container_name: courier-test-server
+    container_name: couriers
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,5 +14,7 @@ services:
     environment:
       - FLASK_APP=courier.py
       - FLASK_ENV=development
-    links:
-      - "python-devserver"
+
+networks:
+  default:
+    name: receipt-net

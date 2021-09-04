@@ -15,23 +15,14 @@ def user():
 
 
 # controller
-myController = Controller()#Missing one argument path to config/HTTPClients.json
+configPath = os.path.dirname(__file__)
+myController = Controller(configPath + "/config/HTTPClients.json")#Missing one argument path to config/HTTPClients.json
 
 #Main function
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
   tripID = request.json
   server.logger.debug(tripID)
-  #response_from_courier = requests.post("http://localhost:8000/get_trip_info", json=tripID)
-
-  #server.logger.debug(response_from_courier)
-  #server.logger.debug(response_from_courier.json()['orderId'])
-
-  #server.logger.debug(response.json())
-
-  #response.raise_for_status()
-  
-  #return response_from_courier.json()
   return tripID
   
 
