@@ -17,4 +17,5 @@ services:
 
 networks:
   default:
+    external: true
     name: receipt-net
