@@ -3,6 +3,9 @@ import requests
 from controllers.controller import Controller
 from flask import Flask, request, render_template, url_for, json, Response, jsonify
 
+#Import the g object, sqlite3 and all functions for the database
+from db_functions import *
+
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
 
 def saveTrip(tripId):
@@ -15,7 +18,8 @@ def saveTrip(tripId):
 
 @server.route("/message-queue")
 def hello():
-  return "Hello World!"
+  conn = getDb()
+  return conn
 
 @server.route("/test")
 def user():
