@@ -16,16 +16,13 @@ def sendTripInfo():
   file = {"tripID":"trip"}
   server.logger.debug(file)
   requests.post("http://receipts:5000/receive_trip_id", json = file)
-  return jsonify(file)
+  return "Successfully Sent"
 
 @server.route("/get_trip_info", methods = ["POST"])
 def sendAllInfo():
   tripID = request.json
-  server.logger.debug(tripID)
   file = json.load(open("fixtures/" + tripID+ ".json"))
-  server.logger.debug(file)
-  requests.post("http://receipts:5000/get_trip_info", json = file)
-  return "Successfully Sent"
+  return file
 
 if __name__ == "__main__":
    server.run(host='0.0.0.0')
