@@ -18,8 +18,7 @@ def saveTrip(tripId):
 
 @server.route("/message-queue")
 def hello():
-  conn = getDb()
-  return conn
+  return "cool?"
 
 
 @server.route("/test")
