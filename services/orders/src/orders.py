@@ -10,16 +10,11 @@ def hello():
   return "Hello World!"
 
 #Simulates courier API interacting with us
-@server.route("/get_order_info", methods=["POST", "GET"])
+@server.route("/get_order_info", methods=["POST"])
 def getTripInfo():
-  if request.method == "POST":
-    server.logger.debug(request.json)
-
-  json_url = os.path.join(server.root_path, "fixtures", "order.json")
-  trip_info = json.load(open(json_url))
-
-  #return Response(json.dumps(trip_info), mimetype='application/json')
-  return trip_info
+  orderId = request.json
+  file = json.load(open("fixtures/" + orderId + ".json"))
+  return file
 
 if __name__ == "__main__":
    server.run(host='0.0.0.0')
