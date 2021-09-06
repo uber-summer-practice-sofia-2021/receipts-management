@@ -6,5 +6,9 @@ The service simulation through Docker:
  - Without the network, communication between the containers wouldn't be possible.
  - The network is automatically created and destroyed with the images and containers through using the 'dockStart.bat' and 'dockStop.bat' (for Windows users).
 ______________
-# NOTE : 
+#### NOTE : 
  - If you are on any other system, you'd have to create the network manually by using 'docker network create receipt-net' and then compose each DockerFile separately or adapt the automated '.bat' files to your system.
+### Example HTTP requests:
+    - http://receipts:5000/...
+    - http://couriers:8000/...
+    - http://orders:9000/...
