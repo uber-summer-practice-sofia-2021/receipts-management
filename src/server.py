@@ -1,17 +1,24 @@
 import os
 import requests
 from controllers.controller import Controller
-from flask import Flask, request, render_template, url_for, json, Response, jsonify
-
+from flask import Flask, config, request, render_template, url_for, json, Response, jsonify
 #Import the g object, sqlite3 and all functions for the database
-from db_functions import *
+from db_class import *
 
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
+server.config.from_json('config.json')
+
+# controller
+configPath = server.config['CONFIG_PATH']
+myController = Controller(configPath + "/HTTPClients.json")#Missing one argument path to config/HTTPClients.json
+
+#db
+#database = DB(open(configPath + "/db_config.json"))
 
 def saveTrip(tripId):
   try:
-    file = open("fixtures/trips/" + tripId + ".json", 'x')
-    server.logger.debug(file)
+    with open ("/fixtures/trips/" + tripId + "json", 'x') as file : 
+      server.logger.debug(file)
   except:
     server.logger.debug("File already exists")
 
@@ -28,13 +35,11 @@ def user():
 
 @server.route("/testdb", methods = ["GET"])
 def testdb():
-  server.logger.debug(getDb())
+  server.logger.debug(server.config['CONFIG_PATH'])
+  server.logger.debug(configPath)
+  server.logger.debug(myController.get_courier_info)
   return "cool"
 
-
-# controller
-configPath = os.path.dirname(__file__)
-myController = Controller(configPath + "/config/HTTPClients.json")#Missing one argument path to config/HTTPClients.json
 
 def getAllInfo(tripID):
   courierResponse = requests.post("http://couriers:8000/get_trip_info", json = tripID)
