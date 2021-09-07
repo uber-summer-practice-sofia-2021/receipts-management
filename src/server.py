@@ -33,35 +33,15 @@ def user():
   return render_template("index.html")
 
 
-<<<<<<< HEAD
 # controller
 configPath = os.path.dirname(__file__)
 #myController = Controller(configPath + "/config/HTTPClients.json")#Missing one argument path to config/HTTPClients.json
 myController = Controller(os.path.join(server.root_path, 'config', 'HTTPClients.json'))
-=======
-@server.route("/testdb", methods = ["GET"])
-def testdb():
-  server.logger.debug(server.config['CONFIG_PATH'])
-  server.logger.debug(configPath)
-  server.logger.debug(myController.get_courier_info)
-  return "cool"
-
-
-def getAllInfo(tripID):
-  courierResponse = requests.post("http://couriers:8000/get_trip_info", json = tripID)
-  courierResponse = courierResponse.json()
-  orderResponse = requests.post("http://orders:9000/get_order_info", json = courierResponse['orderId'])
-  orderResponse = orderResponse.json()
-  server.logger.debug(orderResponse)
-  server.logger.debug(courierResponse)
-
->>>>>>> 22d6e5cd48adc89b4a6ee20074958bd98c1fc1a6
 
 #Main function
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
   tripID = request.json
-<<<<<<< HEAD
   server.logger.debug(tripID)
   #tripID = tripID['tripID']
   #saveTrip(tripID)
@@ -71,11 +51,6 @@ def receiveTripId():
   server.logger.debug(response.text)
 
   #requests.post("http://couriers:8000/get_trip_info", json = tripID)
-=======
-  tripID = tripID['tripID']
-  server.logger.debug(tripID)
-  getAllInfo(tripID)
->>>>>>> 22d6e5cd48adc89b4a6ee20074958bd98c1fc1a6
   return "Successfully received"
 
 
