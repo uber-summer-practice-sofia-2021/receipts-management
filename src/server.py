@@ -4,17 +4,15 @@ from controllers.controller import Controller
 from flask import Flask, config, request, render_template, url_for, json, Response, jsonify
 #Import the g object, sqlite3 and all functions for the database
 from db_class import *
-from pathlib import Path
-import sys
 
 
+#server stuff
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
 server.config['CONFIG_PATH'] = os.path.join(server.root_path, "config")
 
-myController = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")#Missing one argument path to config/HTTPClients.json
-
-#db
-#database = DB(open(configPath + "/db_config.json"))
+#controllers
+myController = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")
+dbController = DB(open(server.config['CONFIG_PATH'] + "/db_config.json"))
 
 def saveTrip(tripId):
   try:
@@ -35,19 +33,16 @@ def user():
 
 @server.route("/testdb", methods = ["GET"])
 def testdb():
-  #database.make_dicts()
-  #server.logger.debug("LOOOOOOOOOOOOOOOOOOOOK")
-  #server.logger.debug(server.config['CONFIG_PATH'])
-  with open (os.path.join((server.root_path), "config", 'HTTPClients.json')) as file:
+  with open (os.path.join(server.config['CONFIG_PATH'], 'HTTPClients.json')) as file:
     data = json.load(file)
     server.logger.debug(data)
   #open('HTTPClients.json')
   return "cool"
 
 def getAllInfo(tripID):
-  courierResponse = requests.post("http://couriers:8000/get_trip_info", json = tripID)
+  courierResponse = requests.post(myController.get_trip_info, json = tripID)
   courierResponse = courierResponse.json()
-  orderResponse = requests.post("http://orders:9000/get_order_info", json = courierResponse['orderId'])
+  orderResponse = requests.post(myController.get_order_info, json = courierResponse['orderId'])
   orderResponse = orderResponse.json()
   server.logger.debug(orderResponse)
   server.logger.debug(courierResponse)
@@ -57,14 +52,8 @@ def getAllInfo(tripID):
 def receiveTripId():
   tripID = request.json
   server.logger.debug(tripID)
-  #tripID = tripID['tripID']
-  #saveTrip(tripID)
-
   response = myController.PostRequestToCourierService(tripID)
-
-  server.logger.debug(response.text)
-
-  #requests.post("http://couriers:8000/get_trip_info", json = tripID)
+  server.logger.debug(response.json)
   return "Successfully received"
 
 
