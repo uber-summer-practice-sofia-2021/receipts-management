@@ -1,0 +1,24 @@
+{
+    "receipts": {
+        "couriername": "Jhon Nash",
+        "distancePrice": 40,
+        "tollPrice": 5,
+        "deliveryTypeTax": 5,
+        "totalPrice": 50,
+        "createdAt": "2012-04-23T18:25:43.511Z",
+        "deliveredAt": "2012-04-23T18:25:43.511Z",
+        "clientName": "John Smith",
+        "from": {
+        "latitude": 1.5,
+        "longtitude": 2.4,
+        "addressName": "Mladost 5, Sofia"
+    },
+         "to": {
+        "latitude": 4.6,
+        "longtitude": 5.4,
+        "addressName": "Mladost 1, Sofia"
+    },
+    "distance": 20,
+    "orderID": "123e4567-e89b-12d3-a456-426614174000"
+}
+}
