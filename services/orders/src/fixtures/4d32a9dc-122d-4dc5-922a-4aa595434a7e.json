@@ -1,11 +1,11 @@
 {
     "clientName": "John Smith",
-    "from": {
+    "address_from": {
         "latitude": 1,
         "longitude": 2,
         "addressName": "Mladost 5, Sofia"
     },
-    "to": {
+    "address_to": {
         "latitude": 4,
         "longitude": 5,
         "addressName": "Mladost 1, Sofia"
