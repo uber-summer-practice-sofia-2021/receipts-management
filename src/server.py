@@ -53,7 +53,7 @@ def receiveTripId():
   tripID = request.json
   server.logger.debug(tripID)
   response = myController.PostRequestToCourierService(tripID)
-  server.logger.debug(response.json)
+  server.logger.debug(response.text)
   return "Successfully received"
 
 
