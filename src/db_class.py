@@ -21,6 +21,10 @@ class DB:
   def make_dicts(cursor, row):
       return dict((cursor.description[idx][0], value)
                   for idx, value in enumerate(row))
+
+
+
+         
                   
   def query_db(self, query, args=(), one=False):
     cur = self.__getDb().execute(query, args)
@@ -29,3 +33,7 @@ class DB:
     return (rv[0] if rv else None) if one else rv
 
   
+
+
+
+
