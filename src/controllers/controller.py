@@ -7,3 +7,6 @@ class Controller:
     
     def PostRequestToCourierService(self, payload):
         return self.get_trip_info.post(payload)
+
+    def PostReuqestToOrderService(self, payload):
+        return self.get_order_info.post(payload)

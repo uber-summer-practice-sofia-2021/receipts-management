@@ -67,7 +67,8 @@ def receiveTripId():
 
   server.logger.debug(response.text)
 
-  #requests.post("http://couriers:8000/get_trip_info", json = tripID)
+  
+
   return "Successfully received"
 
 
