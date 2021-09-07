@@ -1,9 +1,10 @@
 import os
 import requests
-from controllers.controller import Controller
+from controllers.Controller import Controller
 from flask import Flask, config, request, render_template, url_for, json, Response, jsonify
 #Import the g object, sqlite3 and all functions for the database
-from db_class import *
+from controllers.Database_Controller import *
+from controllers.Receipt import Receipt
 
 
 #server stuff
@@ -11,8 +12,9 @@ server = Flask(__name__,  template_folder="resources/templates", static_folder="
 server.config['CONFIG_PATH'] = os.path.join(server.root_path, "config")
 
 #controllers
-myController = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")
-dbController = DB(open(server.config['CONFIG_PATH'] + "/db_config.json"))
+http_controller = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")
+db_controller = Database_Controller(server.config['CONFIG_PATH'] + "/db_config.json")
+receipt_controller = Receipt(server.config['CONFIG_PATH'] + "/parser_template.json")
 
 def saveTrip(tripId):
   try:
@@ -40,9 +42,9 @@ def testdb():
   return "cool"
 
 def getAllInfo(tripID):
-  courierResponse = requests.post(myController.get_trip_info, json = tripID)
+  courierResponse = requests.post(http_controller.get_trip_info, json = tripID)
   courierResponse = courierResponse.json()
-  orderResponse = requests.post(myController.get_order_info, json = courierResponse['orderId'])
+  orderResponse = requests.post(http_controller.get_order_info, json = courierResponse['orderId'])
   orderResponse = orderResponse.json()
   server.logger.debug(orderResponse)
   server.logger.debug(courierResponse)
@@ -51,9 +53,9 @@ def getAllInfo(tripID):
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
   tripID = request.json
-  server.logger.debug(tripID)
-  response = myController.PostRequestToCourierService(tripID)
-  server.logger.debug(response.text)
+  server.logger.debug(tripID)  
+  response = http_controller.PostRequestToCourierService(tripID)
+  server.logger.debug(response.json)
   return "Successfully received"
 
 
