@@ -52,8 +52,15 @@ def getAllInfo(tripID):
 def receiveTripId():
   tripID = request.json
   server.logger.debug(tripID)
-  response = myController.PostRequestToCourierService(tripID)
-  server.logger.debug(response.text)
+
+  response_from_courier = myController.PostRequestToCourierService(tripID)
+
+  server.logger.debug(response_from_courier.text)
+
+  response_from_order = myController.PostReuqestToOrderService({"orderId": response_from_courier.json()['orderId']})
+
+  server.logger.debug(response_from_order.text)
+
   return "Successfully received"
 
 

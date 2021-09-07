@@ -22,7 +22,7 @@ def sendTripInfo():
 def sendAllInfo():
   tripID = request.json
   server.logger.debug(tripID)
-  trip_info = json.load(open(os.path.join(server.root_path, "fixtures", "courier.json")))
+  trip_info = json.load(open(os.path.join(server.root_path, "fixtures", "trip.json")))
   server.logger.debug(trip_info)
 
   return trip_info
