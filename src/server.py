@@ -9,12 +9,9 @@ import sys
 
 
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
-#server.config
-#sys.path.insert(1, server.config['CONFIG_PATH'])
+server.config['CONFIG_PATH'] = os.path.join(server.root_path, "config")
 
-# controller
-configPath = os.path.join((server.root_path), "config")
-myController = Controller(configPath + "/HTTPClients.json")#Missing one argument path to config/HTTPClients.json
+myController = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")#Missing one argument path to config/HTTPClients.json
 
 #db
 #database = DB(open(configPath + "/db_config.json"))
