@@ -22,10 +22,18 @@ def sendTripInfo():
 def sendAllInfo():
   tripID = request.json
   server.logger.debug(tripID)
-  file = json.load(open("fixtures/" + tripID+ ".json"))
-  server.logger.debug(file)
-  requests.post("http://receipts:5000/get_trip_info", json = file)
-  return "Successfully Sent"
+
+  trip_info = json.load(open(os.path.join(server.root_path, "fixtures", "courier.json")))
+
+  server.logger.debug(trip_info)
+
+  #file = json.load(open("fixtures/" + tripID+ ".json"))
+
+  server.logger.debug(trip_info)
+
+  #requests.post("http://receipts:5000/get_trip_info", json = file)
+
+  return trip_info
 
 if __name__ == "__main__":
    server.run(host='0.0.0.0')

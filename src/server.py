@@ -24,15 +24,22 @@ def user():
 
 # controller
 configPath = os.path.dirname(__file__)
-myController = Controller(configPath + "/config/HTTPClients.json")#Missing one argument path to config/HTTPClients.json
+#myController = Controller(configPath + "/config/HTTPClients.json")#Missing one argument path to config/HTTPClients.json
+myController = Controller(os.path.join(server.root_path, 'config', 'HTTPClients.json'))
 
 #Main function
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
   tripID = request.json
-  tripID = tripID['tripID']
-  saveTrip(tripID)
-  requests.post("http://couriers:8000/get_trip_info", json = tripID)
+  server.logger.debug(tripID)
+  #tripID = tripID['tripID']
+  #saveTrip(tripID)
+
+  response = myController.PostRequestToCourierService(tripID)
+
+  server.logger.debug(response.text)
+
+  #requests.post("http://couriers:8000/get_trip_info", json = tripID)
   return "Successfully received"
   
 @server.route("/get_trip_info", methods = ['POST'])
@@ -43,4 +50,4 @@ def receiveWholeTrip():
 
 
 if __name__ == "__main__":
-   server.run(host='0.0.0.0')
+  server.run(host='0.0.0.0')
