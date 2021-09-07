@@ -5,8 +5,9 @@ from flask import g
 
 class Database_Controller:
   def __init__(self, path):
-    with open(json.load(path)) as file:  
-      self.__database = file['path']
+    with open(path) as file:  
+      db_directory = json.load(file)
+      self.__database = db_directory['path']
 
   def get_db(self):
     db = getattr(g, '_database', None)

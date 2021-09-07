@@ -12,11 +12,11 @@ server = Flask(__name__,  template_folder="resources/templates", static_folder="
 server.config['CONFIG_PATH'] = os.path.join(server.root_path, "config")
 
 #controllers
-http_controller = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")
+controller = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")
 db_controller = Database_Controller(server.config['CONFIG_PATH'] + "/db_config.json")
-receipt_controller = Receipt(server.config['CONFIG_PATH'] + "/parser_template.json")
+receipt_controller = Receipt(server.config['CONFIG_PATH'] + "/receipt_template.json")
 
-def saveTrip(tripId):
+def save_trip(tripId):
   try:
     with open ("/fixtures/trips/" + tripId + "json", 'x') as file : 
       server.logger.debug(file)
@@ -38,24 +38,31 @@ def testdb():
   with open (os.path.join(server.config['CONFIG_PATH'], 'HTTPClients.json')) as file:
     data = json.load(file)
     server.logger.debug(data)
-  #open('HTTPClients.json')
   return "cool"
 
-def getAllInfo(tripID):
-  courierResponse = requests.post(http_controller.get_trip_info, json = tripID)
+def get_all_info(tripId):
+
+  #Request to Courier
+  courierResponse = controller.PostRequestToCourierService(tripId)
   courierResponse = courierResponse.json()
-  orderResponse = requests.post(http_controller.get_order_info, json = courierResponse['orderId'])
+  
+  #Request to Order
+  orderResponse = controller.PostReuqestToOrderService(courierResponse['orderId'])
   orderResponse = orderResponse.json()
-  server.logger.debug(orderResponse)
+  
   server.logger.debug(courierResponse)
+  server.logger.debug(orderResponse)
+  #server.logger.debug(Receipt.get_path())
+  #Creating a Receipt 
+  #current_receipt = Receipt.get_receipt(courierResponse, orderResponse)
+  
 
 #Main function
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
-  tripID = request.json
-  server.logger.debug(tripID)  
-  response = http_controller.PostRequestToCourierService(tripID)
-  server.logger.debug(response.json)
+  tripId = request.json
+  server.logger.debug(tripId)  
+  get_all_info(tripId['tripId'])
   return "Successfully received"
 
 
