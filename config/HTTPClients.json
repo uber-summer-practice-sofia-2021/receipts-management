@@ -1,13 +1,13 @@
 [
     {
-        "identifier": "get_trip_info",
-        "endpoint": "http://localhost:8000/get_trip_info",
+        "identifier": "get_order_info",
+        "endpoint": "http://orders:9000/get_order_info",
         "retry_limit": 5,
         "timeout": 3
     },
     {
-        "identifier": "get_courier_info",
-        "endpoint": "http://localhost:8000/get_courier_info",
+        "identifier": "get_trip_info",
+        "endpoint": "http://couriers:8000/get_trip_info",
         "retry_limit": 5,
         "timeout": 3
     }

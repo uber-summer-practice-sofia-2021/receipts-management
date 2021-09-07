@@ -36,7 +36,6 @@ def hello():
 def user():
   return render_template("index.html")
 
-
 @server.route("/testdb", methods = ["GET"])
 def testdb():
   #database.make_dicts()
@@ -56,16 +55,21 @@ def getAllInfo(tripID):
   server.logger.debug(orderResponse)
   server.logger.debug(courierResponse)
 
-
 #Main function
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
   tripID = request.json
-  tripID = tripID['tripID']
   server.logger.debug(tripID)
-  getAllInfo(tripID)
+  #tripID = tripID['tripID']
+  #saveTrip(tripID)
+
+  response = myController.PostRequestToCourierService(tripID)
+
+  server.logger.debug(response.text)
+
+  #requests.post("http://couriers:8000/get_trip_info", json = tripID)
   return "Successfully received"
 
 
 if __name__ == "__main__":
-   server.run(host='0.0.0.0')
+  server.run(host='0.0.0.0')
