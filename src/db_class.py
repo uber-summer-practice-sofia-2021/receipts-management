@@ -1,4 +1,5 @@
 import sqlite3
+from sqlite3.dbapi2 import DatabaseError
 from flask import g
 
 
@@ -20,9 +21,11 @@ class DB:
   def make_dicts(cursor, row):
       return dict((cursor.description[idx][0], value)
                   for idx, value in enumerate(row))
+                  
+  def query_db(self, query, args=(), one=False):
+    cur = self.__getDb().execute(query, args)
+    rv = cur.fetchall()
+    self.__closeDbConnection()
+    return (rv[0] if rv else None) if one else rv
 
-  def insertIntoDb(allData):
-    return "COOL"
-
-  def insertIntoDb(order, trip):
-    return "COOL"
+  

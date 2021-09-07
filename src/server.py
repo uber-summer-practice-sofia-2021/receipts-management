@@ -4,12 +4,16 @@ from controllers.controller import Controller
 from flask import Flask, config, request, render_template, url_for, json, Response, jsonify
 #Import the g object, sqlite3 and all functions for the database
 from db_class import *
+from pathlib import Path
+import sys
+
 
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
-server.config.from_json('config.json')
+#server.config
+#sys.path.insert(1, server.config['CONFIG_PATH'])
 
 # controller
-configPath = server.config['CONFIG_PATH']
+configPath = os.path.join((server.root_path), "config")
 myController = Controller(configPath + "/HTTPClients.json")#Missing one argument path to config/HTTPClients.json
 
 #db
@@ -35,11 +39,14 @@ def user():
 
 @server.route("/testdb", methods = ["GET"])
 def testdb():
-  server.logger.debug(server.config['CONFIG_PATH'])
-  server.logger.debug(configPath)
-  server.logger.debug(myController.get_courier_info)
+  #database.make_dicts()
+  #server.logger.debug("LOOOOOOOOOOOOOOOOOOOOK")
+  #server.logger.debug(server.config['CONFIG_PATH'])
+  with open (os.path.join((server.root_path), "config", 'HTTPClients.json')) as file:
+    data = json.load(file)
+    server.logger.debug(data)
+  #open('HTTPClients.json')
   return "cool"
-
 
 def getAllInfo(tripID):
   courierResponse = requests.post("http://couriers:8000/get_trip_info", json = tripID)
