@@ -1,3 +1,23 @@
+## How to run?
+create the network
+```docker network create receipt-net```
+
+start the three docker images with ```docker-compose up``` at:
+- ```/```
+- ```/services/orders```
+- ```/services/couriers```
+
+clean up the network
+```docker network disconnect receipt-net couriers```
+```docker network disconnect receipt-net orders```
+```docker network disconnect receipt-net receipts```
+```docker network rm receipt-net```
+
+clean up the docker images with ```docker compose down``` at:
+- ```/```
+- ```/services/orders```
+- ```/services/couriers```
+
 # receipts-management
 The service simulation through Docker:
  - All the docker compose files use an external network called 'receipt-net' which is also the default one.
@@ -8,6 +28,7 @@ The service simulation through Docker:
 ______________
 #### NOTE : 
  - If you are on any other system, you'd have to create the network manually by using 'docker network create receipt-net' and then compose each DockerFile separately or adapt the automated '.bat' files to your system.
+
 ### Example HTTP requests:
     - http://receipts:5000/...
     - http://couriers:8000/...
