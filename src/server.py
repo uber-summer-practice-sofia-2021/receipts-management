@@ -32,7 +32,9 @@ def hello():
 
 @server.route("/test")
 def user():
-  return render_template("index.html")
+ json_url = os.path.join(server.root_path, "resources" ,"file.json")
+ json_data = json.load(open(json_url))
+ return render_template('index.html', data = json_data)
 
 @server.route("/testdb", methods = ["GET"])
 def testdb():
