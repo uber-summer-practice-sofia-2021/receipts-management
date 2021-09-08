@@ -1,9 +1,10 @@
 import os
 import requests
-from controllers.controller import Controller
+from controllers.Controller import Controller
 from flask import Flask, config, request, render_template, url_for, json, Response, jsonify
 #Import the g object, sqlite3 and all functions for the database
-from db_class import *
+from controllers.Database_Controller import *
+from controllers.Receipt import Receipt
 
 
 #server stuff
@@ -11,10 +12,11 @@ server = Flask(__name__,  template_folder="resources/templates", static_folder="
 server.config['CONFIG_PATH'] = os.path.join(server.root_path, "config")
 
 #controllers
-myController = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")
-dbController = DB(open(server.config['CONFIG_PATH'] + "/db_config.json"))
+controller = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")
+db_controller = Database_Controller(server.config['CONFIG_PATH'] + "/db_config.json")
+receipt_controller = Receipt(server.config['CONFIG_PATH'] + "/receipt_template.json")
 
-def saveTrip(tripId):
+def save_trip(tripId):
   try:
     with open ("/fixtures/trips/" + tripId + "json", 'x') as file : 
       server.logger.debug(file)
@@ -36,31 +38,31 @@ def testdb():
   with open (os.path.join(server.config['CONFIG_PATH'], 'HTTPClients.json')) as file:
     data = json.load(file)
     server.logger.debug(data)
-  #open('HTTPClients.json')
   return "cool"
 
-def getAllInfo(tripID):
-  courierResponse = requests.post(myController.get_trip_info, json = tripID)
+def get_all_info(tripId):
+
+  #Request to Courier
+  courierResponse = controller.PostRequestToCourierService(tripId)
   courierResponse = courierResponse.json()
-  orderResponse = requests.post(myController.get_order_info, json = courierResponse['orderId'])
+  
+  #Request to Order
+  orderResponse = controller.PostReuqestToOrderService(courierResponse['orderId'])
   orderResponse = orderResponse.json()
-  server.logger.debug(orderResponse)
+  
   server.logger.debug(courierResponse)
+  server.logger.debug(orderResponse)
+  #server.logger.debug(Receipt.get_path())
+  #Creating a Receipt 
+  #current_receipt = Receipt.get_receipt(courierResponse, orderResponse)
+  
 
 #Main function
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
-  tripID = request.json
-  server.logger.debug(tripID)
-
-  response_from_courier = myController.PostRequestToCourierService(tripID)
-
-  server.logger.debug(response_from_courier.text)
-
-  response_from_order = myController.PostReuqestToOrderService({"orderId": response_from_courier.json()['orderId']})
-
-  server.logger.debug(response_from_order.text)
-
+  tripId = request.json
+  server.logger.debug(tripId)  
+  get_all_info(tripId['tripId'])
   return "Successfully received"
 
 
