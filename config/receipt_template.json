@@ -1,0 +1,35 @@
+{
+    "receiptId" : "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+    "clientName":"",
+    "clientEmail":"",
+    "phoneNumber":"",
+    "orderId":"XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+
+    "address_from": {
+        "latitude":"",
+        "longitude":"",
+        "addressName":""
+    },
+
+    "address_to":{
+        "latitude":"",
+        "longitude":"",
+        "addressName":""
+    },
+
+    "dimensions":{
+        "length":"",
+        "depth": "",
+        "height": "",
+        "weight": ""
+    },
+
+    "deliveryType":"",
+    "tripId" : "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+    "courierId":"XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+    "courierName":"",
+    "courier_phone":"",
+    "courier_email":"",
+    "createdAt":"",
+    "deliveredAt":""
+}

@@ -1,19 +1,21 @@
 import sqlite3
-from sqlite3.dbapi2 import DatabaseError
+import json
 from flask import g
 
 
-class DB:
+class Database_Controller:
   def __init__(self, path):
-    self.__database = path
+    with open(path) as file:  
+      db_directory = json.load(file)
+      self.__database = db_directory['path']
 
-  def __getDb(self):
+  def get_db(self):
     db = getattr(g, '_database', None)
     if db is None:
       db = g._database = sqlite3.connect(self.__database)
     return db
 
-  def __closeDbConnection(self):
+  def close_db_connection(self):
     db = getattr(g, '_database', None)
     if db is not None:
       db.close()

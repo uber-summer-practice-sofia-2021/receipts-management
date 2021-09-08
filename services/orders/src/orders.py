@@ -12,12 +12,9 @@ def hello():
 #Simulates courier API interacting with us
 @server.route("/get_order_info", methods=["POST"])
 def getTripInfo():
-  server.logger.debug(request.json)
-
-  json_path = os.path.join(server.root_path, "fixtures", "order.json")
-  order_info = json.load(open(json_path))
-
-  #return Response(json.dumps(trip_info), mimetype='application/json')
+  order = request.json
+  with open (os.path.join(server.root_path, "fixtures", order + ".json")) as file:
+    order_info = json.load(file)
   return order_info
 
 if __name__ == "__main__":
