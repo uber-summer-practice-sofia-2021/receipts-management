@@ -5,13 +5,13 @@
     "phoneNumber":"",
     "orderId":"XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
 
-    "address_from": {
+    "from": {
         "latitude":"",
         "longitude":"",
         "addressName":""
     },
 
-    "address_to":{
+    "to":{
         "latitude":"",
         "longitude":"",
         "addressName":""
