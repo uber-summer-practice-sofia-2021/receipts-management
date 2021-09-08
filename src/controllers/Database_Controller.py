@@ -25,9 +25,9 @@ class Database_Controller:
                   for idx, value in enumerate(row))
                   
   def query_db(self, query, args=(), one=False):
-    cur = self.__getDb().execute(query, args)
+    cur = self.get_db().execute(query, args)
     rv = cur.fetchall()
-    self.__closeDbConnection()
+    self.close_db_connection()
     return (rv[0] if rv else None) if one else rv
 
   

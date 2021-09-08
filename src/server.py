@@ -10,11 +10,12 @@ from controllers.Receipt import Receipt
 #server stuff
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
 server.config['CONFIG_PATH'] = os.path.join(server.root_path, "config")
+Receipt.set_template_data(server.config['CONFIG_PATH'] + "/receipt_template.json") 
+
 
 #controllers
 controller = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")
 db_controller = Database_Controller(server.config['CONFIG_PATH'] + "/db_config.json")
-receipt_controller = Receipt(server.config['CONFIG_PATH'] + "/receipt_template.json")
 
 def save_trip(tripId):
   try:
@@ -50,11 +51,8 @@ def get_all_info(tripId):
   orderResponse = controller.PostReuqestToOrderService(courierResponse['orderId'])
   orderResponse = orderResponse.json()
   
-  server.logger.debug(courierResponse)
-  server.logger.debug(orderResponse)
-  #server.logger.debug(Receipt.get_path())
   #Creating a Receipt 
-  #current_receipt = Receipt.get_receipt(courierResponse, orderResponse)
+  currentReceipt = Receipt(courierResponse, orderResponse, tripId)
   
 
 #Main function
