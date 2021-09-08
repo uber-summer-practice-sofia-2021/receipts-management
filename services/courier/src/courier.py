@@ -20,7 +20,7 @@ def sendTripInfo():
 @server.route("/get_trip_info", methods = ["POST"])
 def sendAllInfo():
   tripId = request.json
-  with open(os.path.join(server.root_path, "fixtures", tripId + ".json")) as file:
+  with open(os.path.join(server.root_path, "fixtures", "trip.json")) as file:
     trip_info = json.load(file)
   server.logger.debug(trip_info)
   return trip_info

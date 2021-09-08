@@ -55,15 +55,32 @@ def get_all_info(tripId):
   
   #Creating a Receipt 
   currentReceipt = Receipt(courierResponse, orderResponse, tripId)
+
+  server.logger.debug(currentReceipt.data)
+
+  return render_template("index.html", data = currentReceipt.data, receiptId = currentReceipt.receiptId)
   
 
-#Main function
+#Main function  
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
   tripId = request.json
   server.logger.debug(tripId)  
-  get_all_info(tripId['tripId'])
-  return "Successfully received"
+  
+  #Request to Courier
+  courierResponse = controller.PostRequestToCourierService(tripId)
+  courierResponse = courierResponse.json()
+  
+  #Request to Order
+  orderResponse = controller.PostReuqestToOrderService(courierResponse['orderId'])
+  orderResponse = orderResponse.json()
+  
+  #Creating a Receipt 
+  currentReceipt = Receipt(courierResponse, orderResponse, tripId)
+
+  #server.logger.debug(currentReceipt.data)
+
+  return render_template("index.html", data = currentReceipt.data, receiptId = currentReceipt.receiptId)
 
 
 if __name__ == "__main__":

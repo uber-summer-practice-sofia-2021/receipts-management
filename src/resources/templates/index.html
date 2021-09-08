@@ -24,7 +24,7 @@
                               <tbody><tr>
                                   <td class="content-block">
                                       <h2 bold=true>IT’S ORDERED!</h2>
-                                      <p>Hi {{ data['receipts']['clientName'] }}, your order has been received.</p>
+                                      <p>Hi {{ data['clientName'] }}, your order has been received.</p>
                                   </td>
                               </tr>
                               <tr>
@@ -32,32 +32,9 @@
                                       <table class="invoice">
                                           <tbody><tr>
                                             <td>
-                                              <!-- <td>Street: {{ data['receipts']['to']['addressName'] }} <br> -->
-                                                  Order ID: {{ data['receipts']['orderID'] }} <br>
-                                                  Order date: {{ data['receipts']['deliveredAt'] }}<br>
-                                                  Delivered by: {{ data['receipts']['couriername'] }}
-                                              </td>
-                                          </tr>
-                                          <tr>
-                                              <td>
-                                                  <table class="invoice-items" cellpadding="0" cellspacing="0">
-                                                      <tbody><tr>
-                                                          <td>Distance tax</td>
-                                                          <td class="alignright">$ {{ data['receipts']['distancePrice'] }}</td>
-                                                      </tr>
-                                                      <tr>
-                                                          <td>Toll tax</td>
-                                                          <td class="alignright">$ {{ data['receipts']['tollPrice'] }}</td>
-                                                      </tr>
-                                                      <tr>
-                                                          <td>Express delivery</td>
-                                                          <td class="alignright">$ {{ data['receipts']['deliveryTypeTax'] }}</td>
-                                                      </tr>
-                                                      <tr class="total">
-                                                          <td class="alignright" width="80%">Total</td>
-                                                          <td class="alignright">$ {{ data['receipts']['totalPrice'] }}</td>
-                                                      </tr>
-                                                  </tbody></table>
+                                                  Order ID: {{ data['orderID'] }} <br>
+                                                  Order date: {{ data['deliveredAt'] }}<br>
+                                                  Delivered by: {{ data['couriername'] }}
                                               </td>
                                           </tr>
                                       </tbody></table>
