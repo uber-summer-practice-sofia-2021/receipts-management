@@ -1,6 +1,6 @@
 from controllers.Receipt import Receipt
 from controllers.Controller import Controller
-from controllers.Database_Controller import *
+from controllers.Database_Controller import Database_Controller
 from server import server
 from flask import g
 

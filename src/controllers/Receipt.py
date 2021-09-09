@@ -19,16 +19,10 @@ class Receipt:
         return isinstance(data, str)
 
     def __validateCourier(self, courierResponse):
-        return "Error"
+        pass
 
     def __validateOrder(self, orderResponse):
-        return "Error"
-
-    def get_data(self):
-        return self.__data
-
-    def get_path(self):
-        return self.__current_path
+        pass
 
     def __init__(self, courierResponse, orderResponse, tripId=None):
         if tripId is None:
