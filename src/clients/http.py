@@ -1,4 +1,3 @@
-from flask import config, jsonify
 import requests, json
 
 class HTTPClient:
