@@ -30,12 +30,15 @@ class Receipt:
     def get_path(self):
         return self.__current_path
 
-    def __init__(self, courierResponse, orderResponse, tripId):
-        self.data = Receipt.template_data
-        self.receiptId = uuid.uuid4()
-        self.data['tripId'] = tripId
-        for key in courierResponse:
-            self.data[key] = courierResponse[key]
-        for key in orderResponse:
-            self.data[key] = orderResponse[key]
-
+    def __init__(self, courierResponse, orderResponse, tripId=None):
+        if tripId is None:
+            self.receiptId = uuid.UUID(courierResponse)
+            self.data = orderResponse
+        else:
+            self.data = Receipt.template_data
+            self.receiptId = str(uuid.uuid4())
+            self.data['tripId'] = tripId
+            for key in courierResponse:
+                self.data[key] = courierResponse[key]
+            for key in orderResponse:
+                self.data[key] = orderResponse[key]

@@ -1,21 +1,12 @@
+from flask import Flask, request, render_template
 import os
-import requests
-from controllers.Controller import Controller
-from flask import Flask, config, request, render_template, url_for, json, Response, jsonify
-#Import the g object, sqlite3 and all functions for the database
-from controllers.Database_Controller import *
-from controllers.Receipt import Receipt
 
-
-#server stuff
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
 server.config['CONFIG_PATH'] = os.path.join(server.root_path, "config")
-Receipt.set_template_data(server.config['CONFIG_PATH'] + "/receipt_template.json") 
 
+#initialize controllers
+from controllers.Init_Controllers import *
 
-#controllers
-controller = Controller(server.config['CONFIG_PATH'] + "/HTTPClients.json")
-db_controller = Database_Controller(server.config['CONFIG_PATH'] + "/db_config.json")
 
 def save_trip(tripId):
   try:
@@ -44,22 +35,22 @@ def testdb():
   return "cool"
 
 def get_all_info(tripId):
-
   #Request to Courier
-  courierResponse = controller.PostRequestToCourierService(tripId)
+  courierResponse = get_controller().PostRequestToCourierService(tripId)
   courierResponse = courierResponse.json()
-  
-  #Request to Order
-  orderResponse = controller.PostReuqestToOrderService(courierResponse['orderId'])
+  server.logger.debug(courierResponse)
+  orderResponse = get_controller().PostReuqestToOrderService(courierResponse['orderId'])
   orderResponse = orderResponse.json()
-  
-  #Creating a Receipt 
+  server.logger.debug(orderResponse)
   currentReceipt = Receipt(courierResponse, orderResponse, tripId)
 
-  server.logger.debug(currentReceipt.data)
+  #test inserting into database
+  get_db_controller().insert_into_db(currentReceipt)
 
-  return render_template("index.html", data = currentReceipt.data, receiptId = currentReceipt.receiptId)
-  
+  #test obj from database
+  newReceipt = get_db_controller().get_from_db("9140e029-a1f6-40fa-be68-3f57a5318495", server.logger, Receipt)
+  server.logger.debug("AFTER COMMAND")
+  server.logger.debug(newReceipt.data)
 
 #Main function  
 @server.route("/receive_trip_id", methods = ['POST'])
@@ -67,12 +58,15 @@ def receiveTripId():
   tripId = request.json
   server.logger.debug(tripId)  
   
+  #now everybody's happy
+  get_all_info(tripId['tripId'])
+
   #Request to Courier
-  courierResponse = controller.PostRequestToCourierService(tripId)
+  courierResponse = get_controller().PostRequestToCourierService(tripId)
   courierResponse = courierResponse.json()
   
   #Request to Order
-  orderResponse = controller.PostReuqestToOrderService(courierResponse['orderId'])
+  orderResponse = get_controller().PostReuqestToOrderService(courierResponse['orderId'])
   orderResponse = orderResponse.json()
   
   #Creating a Receipt 
