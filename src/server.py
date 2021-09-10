@@ -63,7 +63,7 @@ def get_all_info(tripId):
   #test loading obj from database
   newReceipt = get_db_controller().get_from_db("9140e029-a1f6-40fa-be68-3f57a5318495", server.logger, Receipt)
   server.logger.debug('RIGHT AFTER DB')
-  #get_controller().send_email(server.logger, currentReceipt)
+  get_controller().send_email(server.logger, currentReceipt)
   server.logger.debug("AFTER COMMAND")
   server.logger.debug(newReceipt.data)
 
