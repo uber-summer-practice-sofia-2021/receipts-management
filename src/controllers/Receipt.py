@@ -26,7 +26,7 @@ class Receipt:
 
     def __init__(self, courierResponse, orderResponse, tripId=None):
         if tripId is None:
-            self.receiptId = uuid.UUID(courierResponse)
+            self.receiptId = courierResponse
             self.data = orderResponse
         else:
             self.data = Receipt.template_data
