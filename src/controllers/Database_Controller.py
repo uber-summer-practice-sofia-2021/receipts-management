@@ -20,7 +20,7 @@ class Database_Controller:
   def __deserialize_data(self, data):
     deserialized = pickle.loads(data)
     return deserialized
-  
+
   def insert_into_db(self, receiptObj):
     cur = self.database.cursor()
     data_tuple = (receiptObj.receiptId, self.__serialize_data(receiptObj.data))
@@ -33,8 +33,8 @@ class Database_Controller:
     logger.debug("Just before command")
     command = """SELECT * 
              FROM receipts 
-             WHERE receiptId = '{}' """.format(u_id)
-    cur.execute(command)
+             WHERE receiptId = ? """
+    cur.execute(command, (u_id,))
     data = cur.fetchall()
     newReceipt = Receipt(data[0][0], self.__deserialize_data(data[0][1]))
     return newReceipt
