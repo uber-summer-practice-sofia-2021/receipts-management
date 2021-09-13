@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template
 import os
 import json
+import threading
 
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
 server.config['CONFIG_PATH'] = os.path.join(server.root_path, "config")
@@ -49,23 +50,23 @@ def get_all_info(tripId):
   courierResponse = courierResponse.json()
 
   #Request to Order
-  server.logger.debug(courierResponse)
   orderResponse = get_controller().PostReuqestToOrderService(courierResponse['orderId'])
   orderResponse = orderResponse.json()
-  server.logger.debug(orderResponse)
 
   #Creating a Receipt
   currentReceipt = Receipt(courierResponse, orderResponse, tripId)
 
   #test inserting into database
-  get_db_controller().insert_into_db(currentReceipt)
+  #hard-coded for error testing (currently handles errors fine(but might be updated))
+  currentReceipt.receiptId="124325"
+  get_db_controller().insert_into_db(currentReceipt, server.logger)
 
   #test loading obj from database
   newReceipt = get_db_controller().get_from_db("9140e029-a1f6-40fa-be68-3f57a5318495", server.logger, Receipt)
-  server.logger.debug('RIGHT AFTER DB')
-  get_controller().send_email(currentReceipt)
-  server.logger.debug("AFTER COMMAND")
   server.logger.debug(newReceipt.data)
+  server.logger.debug('RIGHT AFTER DB')
+  #get_controller().send_email(currentReceipt)
+  server.logger.debug("AFTER COMMAND")
 
 
 
