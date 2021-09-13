@@ -36,3 +36,4 @@
   
 - https://www.twilio.com/blog/asynchronous-http-requests-in-python-with-aiohttp 
  
+- https://medium.com/@TimvanBaarsen/apache-kafka-cli-commands-cheat-sheet-a6f06eac01b
