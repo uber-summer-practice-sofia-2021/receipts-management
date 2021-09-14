@@ -1,7 +1,7 @@
+from sre_constants import SUCCESS
 from flask import Flask, request, render_template
 import os
 import json
-import threading
 
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
 server.config['CONFIG_PATH'] = os.path.join(server.root_path, "config")
@@ -54,19 +54,16 @@ def get_all_info(tripId):
   orderResponse = orderResponse.json()
 
   #Creating a Receipt
-  currentReceipt = Receipt(courierResponse, orderResponse, tripId)
-
-  #test inserting into database
-  #hard-coded for error testing (currently handles errors fine(but might be updated))
-  currentReceipt.receiptId="124325"
-  get_db_controller().insert_into_db(currentReceipt, server.logger)
-
-  #test loading obj from database
-  newReceipt = get_db_controller().get_from_db("9140e029-a1f6-40fa-be68-3f57a5318495", server.logger, Receipt)
-  server.logger.debug(newReceipt.data)
-  server.logger.debug('RIGHT AFTER DB')
-  #get_controller().send_email(currentReceipt)
-  server.logger.debug("AFTER COMMAND")
+  try:
+    currentReceipt = Receipt(courierResponse, orderResponse, tripId)
+    get_db_controller().insert_into_db(currentReceipt, server.logger)
+    #get_controller().send_email(currentReceipt)
+    #test loading obj from database
+    #newReceipt = get_db_controller().get_from_db("9140e029-a1f6-40fa-be68-3f57a5318495", server.logger, Receipt)
+  except BaseException as e:
+    server.logger.debug(e)
+  finally:
+    return "Successfully Received"
 
 
 
@@ -75,22 +72,7 @@ def get_all_info(tripId):
 def receiveTripId():
   trip = request.json
   trip = trip['tripId'] 
-  
-  #now everybody's happy
-  get_all_info(trip)
-
-  #Request to Courier
-  courierResponse = get_controller().PostRequestToCourierService(trip)
-  courierResponse = courierResponse.json()
-  
-  #Request to Order
-  orderResponse = get_controller().PostReuqestToOrderService(courierResponse['orderId'])
-  orderResponse = orderResponse.json()
-  
-  #Creating a Receipt 
-  currentReceipt = Receipt(courierResponse, orderResponse, trip)
-
-  return render_template("index.html", data = currentReceipt.data, receiptId = currentReceipt.receiptId)
+  return get_all_info(trip)
 
 
 if __name__ == "__main__":

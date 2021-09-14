@@ -2,6 +2,11 @@
 import json
 import uuid
 import numbers
+import re
+
+u_id_validator = re.compile('[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}', flags=re.IGNORECASE)
+phone_validator = re.compile('(\+?359)?[- ]?(((\(0[7-8]00\)|0[7-8]00)[- ]?\d{5})|((\(02\)|02)[- ]?\d{3}[- ]?\d{4})|((\(02\d\)|02\d)[- ]?[- ]?(\d{2}[- ]?\d{4}|\d{3}[- ]?\d{3}))|((\(0?8[4-9]\)|0?8[7-9])[- ]?(\d{5}[- ]?\d{2}|\d{4}[- ]?\d{3}|\d{3}[- ]?\d{4}|\d{2}[- ]?\d{5}|\d[- ]?\d{6}|\d{2}[- ]?\d{3}[- ]?\d{2})))')
+
 
 class Receipt:
     template_data = None
@@ -12,23 +17,45 @@ class Receipt:
         with open (Receipt.template_path) as file: 
             Receipt.template_data = json.load(file)
 
-    def __checkNumber(self, data):
-        return isinstance(data, numbers.Number)
+    def __checkUUID(self, u_id):
+        u_id_match = u_id_validator.match(u_id)
+        if u_id_match is None:
+            raise Exception('Invalid UUID')
+
+    def __checkPhoneNumber(self, phoneNumber):
+        # (02) xxx xxxx (Sofia)
+        # (0xx) xx xxxx
+        # (0xxx) xxxxx
+        # (0xxxx) xxxx
+        # 08z xxxx xxx (mobiles)
+        # 0800 xxxxx
+        # +359-(089)-44-877-03 --------- biggest possible number
+        if(len(phoneNumber)>20):
+            raise Exception('Invalid Phone Number')
+        phone_match = phone_validator.match(phoneNumber)
+        if phone_match is None:
+            raise Exception('Invalid Phone Number')
 
     def __checkString(self, data):
         return isinstance(data, str)
 
     def __validateCourier(self, courierResponse):
-        pass
+        self.__checkUUID(courierResponse['courierId'])
 
     def __validateOrder(self, orderResponse):
         pass
 
     def __init__(self, courierResponse, orderResponse, tripId=None):
+        #constructor 1 for creating objects from database
+        #courierResponse in this case is the receiptId
+        #the data is the deserialized input
         if tripId is None:
             self.receiptId = courierResponse
             self.data = orderResponse
+        #constructor 2 for creating new receipts from real responses
         else:
+            self.__validateCourier(courierResponse)
+            self.__validateOrder(orderResponse)
             self.data = Receipt.template_data
             self.receiptId = str(uuid.uuid4())
             self.data['tripId'] = tripId
