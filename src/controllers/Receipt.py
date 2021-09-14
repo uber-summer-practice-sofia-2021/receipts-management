@@ -42,8 +42,13 @@ class Receipt:
             raise Exception(decimalNum + ' is not a valid float/int type.')
 
     def __checkString(self, data):
-        if not isinstance(data, str):
-            raise Exception(data + "is not a string")
+        try:
+            float(data)
+            raise Exception(data + ' is of type float/int. Should be a string')
+        except ValueError:
+            pass
+        except Exception as e:
+            raise
 
     def __validateCourier(self, courierResponse):
         self.__checkUUID(courierResponse['courierId'])
