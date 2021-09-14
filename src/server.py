@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template
 import os
 import json
-import threading
 
 server = Flask(__name__,  template_folder="resources/templates", static_folder="resources/")
 server.config['CONFIG_PATH'] = os.path.join(server.root_path, "config")
