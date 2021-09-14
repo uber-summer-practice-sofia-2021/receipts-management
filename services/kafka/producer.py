@@ -1,6 +1,12 @@
-import faust
+"""
+Mock kafka producer.
 
-# from datetime import datetime
+By defualt use at least once processing.
+See 'https://faust.readthedocs.io/en/latest/userguide/settings.html#processing-guarantee'.
+
+"""
+
+import faust
 
 app = faust.App(
     "kafka_producer",
@@ -8,7 +14,7 @@ app = faust.App(
     topic_partitions=1,
 )
 
-# datetime: https://faust.readthedocs.io/en/latest/userguide/models.html?highlight=datetime
+
 class TripID(faust.Record):
     id: str
 

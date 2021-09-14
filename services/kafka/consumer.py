@@ -1,6 +1,13 @@
-import faust
+"""
+Mock kafka consumer.
 
-# from datetime import datetime
+By defualt use at least once processing.
+See 'https://faust.readthedocs.io/en/latest/userguide/settings.html#processing-guarantee'.
+
+"""
+
+import faust
+import aiohttp
 
 app = faust.App(
     "kafka_consumer",
@@ -8,7 +15,7 @@ app = faust.App(
     topic_partitions=1,
 )
 
-# datetime: https://faust.readthedocs.io/en/latest/userguide/models.html?highlight=datetime
+
 class TripID(faust.Record):
     id: str
 
@@ -19,8 +26,14 @@ trip_IDs_topic = app.topic("test", key_type=None, value_type=TripID)
 
 @app.agent(trip_IDs_topic)
 async def read_trip_IDs(trips):
-    async for trip in trips:
-        print(f"trip {trip.id} happened")
+    async with aiohttp.ClientSession() as session:
+        async for trip in trips:
+            freya_url = "http://localhost:5000/receive_trip_id"
+            ## temporary fix until our main endpoint is properly configured
+            my_json = {"tripId": "trip"}
+            async with session.post(freya_url, json=my_json) as resp:
+                helper = await resp.text()
+                print(f"send message with trip id {trip.id}")
 
 
 if __name__ == "__main__":
