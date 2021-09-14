@@ -30,10 +30,8 @@ class Receipt:
         # 08z xxxx xxx (mobiles)
         # 0800 xxxxx
         # +359-(089)-44-877-03 --------- biggest possible number
-        if(len(phoneNumber)>20):
-            raise Exception('Invalid Phone Number')
         phone_match = phone_validator.match(phoneNumber)
-        if phone_match is None:
+        if phone_match is None or len(phoneNumber)>20:
             raise Exception('Invalid Phone Number')
 
     def __checkString(self, data):
