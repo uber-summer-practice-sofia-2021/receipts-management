@@ -2,6 +2,8 @@
 import json
 import uuid
 import re
+import calendar
+from datetime import datetime
 
 u_id_validator = re.compile('[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}', flags=re.IGNORECASE)
 phone_validator = re.compile('(\+?359[- ]?)?(((\(0?8[4-9]\)|0?8[7-9])[- ]?(\d{5}[- ]?\d{2}|\d{4}[- ]?\d{3}|\d{3}[- ]?\d{4}|\d{2}[- ]?\d{5}|\d[- ]?\d{6}|\d{2}[- ]?\d{3}[- ]?\d{2}))|((\(0[7-8]00\)|0[7-8]00)[- ]?\d{5})|((\(02\)|02)[- ]?\d{3}[- ]?\d{4})|((\(0\d{2}\)|0\d{2})[- ]?[- ]?(\d{2}[- ]?\d{4}|\d{3}[- ]?\d{3}))|((\(0\d{3}\)|0\d{3})[- ]?\d{5})|((\(0\d{4}\)|0\d{4})[- ]?\d{4}))')
@@ -59,14 +61,20 @@ class Receipt:
         except Exception as e:
             raise
 
+    def __checkDateTime(self, data):
+        newDate = calendar.timegm()
+
     def __validateCourier(self, courierResponse):
         self.__checkUUID(courierResponse['courierId'])
         self.__checkNumberData(courierResponse['distance'])
         self.__checkString(courierResponse['courierName'])
+        self.__checkUUID(courierResponse['orderId'])
 
 
     def __validateOrder(self, orderResponse):
-        pass
+        self.__checkString(orderResponse['clientName'])
+        orderResponse['clientEmail'] = self.__checkEmail(orderResponse['clientEmail'])
+        orderResponse['phoneNumber'] = self.__checkPhoneNumber(orderResponse['phoneNumber'])
 
     def __init__(self, courierResponse, orderResponse, tripId=None):
         #constructor 1 for creating objects from database
