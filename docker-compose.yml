@@ -1,0 +1,44 @@
+version: '3.7'
+services:
+  receipts:
+    container_name: receipts
+    build:
+      context: .
+    volumes:
+      - ./src:/app
+      - ./config:/app/config
+    ports:
+      - target: 5000
+        published: 5000
+        protocol: tcp
+    environment:
+      - FLASK_APP=server.py
+      - FLASK_ENV=development
+
+  couriers:
+    container_name: couriers
+    build:
+      context: ./services/courier
+    volumes:
+      - ./services/courier/src:/app
+    ports:
+      - target: 8000
+        published: 8000
+        protocol: tcp
+    environment:
+      - FLASK_APP=courier.py
+      - FLASK_ENV=development
+
+  orders:
+    container_name: orders
+    build:
+      context: ./services/orders
+    volumes:
+      - ./services/orders/src:/app
+    ports:
+      - target: 9000
+        published: 9000
+        protocol: tcp
+    environment:
+      - FLASK_APP=orders.py
+      - FLASK_ENV=development

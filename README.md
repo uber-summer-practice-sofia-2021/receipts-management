@@ -1,24 +1,14 @@
 ## How to run?
-create the network
-```docker network create receipt-net```
+### unix based 
 
-start the three docker images with ```docker-compose up``` at:
-- ```/```
-- ```/services/orders```
-- ```/services/couriers```
+Run as usual ---------------> ```docker-compose.yml up -d```.
+Don't forget to clean up ---> ```docker-compose.yml down```.
 
-clean up the network
-```docker network disconnect receipt-net couriers```
-```docker network disconnect receipt-net orders```
-```docker network disconnect receipt-net receipts```
-```docker network rm receipt-net```
-
-clean up the docker images with ```docker compose down``` at:
-- ```/```
-- ```/services/orders```
-- ```/services/couriers```
-
-# receipts-management
+Curl command for requesting our 'main' tripID receiving endpoint.
+```
+curl -H "Content-type: application/json" -d '{"tripId":"trip"}' 'http://localhost:5000/receive_trip_id'
+```
+### windows
 The service simulation through Docker:
  - All the docker compose files use an external network called 'receipt-net' which is also the default one.
  - The network is created, so the isolated containers can communicate with each other, in order to simulate the activity of the other services. Otherwise, the communication through local ports would have to be done by using direct ip's and ports, instead of references.
