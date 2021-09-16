@@ -39,7 +39,8 @@
 - https://medium.com/@TimvanBaarsen/apache-kafka-cli-commands-cheat-sheet-a6f06eac01b
 
 ## some kafka cli
-Run from ```$KAFKA_HOME/bin/```. Don't forget to run the kafka container first.
+Run from ```$KAFKA_HOME/bin/```. Don't forget to run kafka first.
+One way to run kafka is from ```./docker-compose.yml```
 
 The topic is called ```test```.
 
