@@ -3,9 +3,9 @@
 ## set-up
 0. run kafka in docker container and create single partition topic
 
-1. create flask server to feed the kafka topic
+1. feed the kafka topic with producer.py to mock data 
 
-2. read from kafka topic with faust stream
+2. read from kafka topic with faust stream - consumer.py
 
 3. send async request from faust stream handler to our main server endpoint
 
