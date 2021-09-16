@@ -1,19 +1,19 @@
 {
-    "clientName":"",
-    "clientEmail":"",
-    "phoneNumber":"",
-    "orderId":"XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+    "clientName":"tagged",
+    "clientEmail":"tagged",
+    "phoneNumber":"tagged",
+    "orderId":"tagged",
 
     "from": {
-        "latitude":"",
-        "longitude":"",
-        "addressName":""
+        "latitude":"tagged",
+        "longitude":"tagged",
+        "addressName":"tagged"
     },
 
     "to":{
-        "latitude":"",
-        "longitude":"",
-        "addressName":""
+        "latitude":"tagged",
+        "longitude":"tagged",
+        "addressName":"tagged"
     },
 
     "dimensions":{
@@ -23,12 +23,12 @@
         "weight": ""
     },
 
-    "deliveryType":"",
-    "tripId" : "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-    "courierId":"XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-    "courierName":"",
+    "deliveryType":"tagged",
+    "courierId":"tagged",
+    "courierName":"tagged",
     "courier_phone":"",
     "courier_email":"",
-    "createdAt":"",
-    "deliveredAt":""
+    "distance":"tagged",
+    "createdAt":"tagged",
+    "deliveredAt":"tagged"
 }
