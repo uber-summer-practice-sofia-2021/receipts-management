@@ -44,11 +44,11 @@ Run from ```$KAFKA_HOME/bin/```. Don't forget to run the kafka container first.
 The topic is called ```test```.
 
 - feed kafka
-  - ```
+```
 ./kafka-console-producer.sh --topic test --bootstrap-server localhost:9092
 ```
     
 - read from kafka
-  - ```
+```
 ./kafka-console-consumer.sh --topic test --from-beginning --bootstrap-server localhost:9092
 ```
