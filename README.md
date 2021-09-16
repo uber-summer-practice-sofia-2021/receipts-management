@@ -2,6 +2,7 @@
 ### unix based 
 
 Run as usual ---------------> ```docker-compose.yml up -d```.
+
 Don't forget to clean up ---> ```docker-compose.yml down```.
 
 Curl command for requesting our 'main' tripID receiving endpoint.
