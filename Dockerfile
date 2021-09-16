@@ -9,6 +9,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY src/ .
+COPY config/ /app/config
 
 EXPOSE 5000
 ENV FLASK_ENV=development
