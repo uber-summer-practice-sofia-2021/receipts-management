@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  server:
+    container_name: receipts
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app
+      - ./config:/app/config
+    ports:
+      - target: 5000
+        published: 5000
+        protocol: tcp
+    environment:
+      - FLASK_APP=server.py
+      - FLASK_ENV=development
+
+networks:
+  default:
+    external: true
+    name: receipt-net
