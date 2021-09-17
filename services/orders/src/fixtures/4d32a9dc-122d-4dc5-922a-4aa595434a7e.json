@@ -1,5 +1,5 @@
 {
-    "clientName": "John Smith",
+    "clientName": "John Nash",
     "from": {
         "latitude": 1,
         "longitude": 2,
@@ -11,7 +11,7 @@
         "addressName": "Mladost 1, Sofia"
     },
     "clientEmail": "lubengeorgiev071@gmail.com",
-    "phoneNumber": "0894546512",
+    "phoneNumber": "08454643542",
     "dimensions": {
         "length": 5,
         "depth": 2,
