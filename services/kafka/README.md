@@ -1,4 +1,12 @@
 # kafka
+Run the producer from ``` /services/kafka/ ```
+```
+python producer.py worker -l info --without-web
+```
+Run the consumer from ``` /services/kafka/ ```
+```
+python consumer.py worker -l info --without-web
+```
 
 ## set-up
 0. run kafka in docker container and create single partition topic

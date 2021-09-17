@@ -30,7 +30,7 @@ async def read_trip_IDs(trips):
         async for trip in trips:
             freya_url = "http://localhost:5000/receive_trip_id"
             ## temporary fix until our main endpoint is properly configured
-            my_json = {"tripId": "trip"}
+            my_json = {"tripId": "97df8470-1a84-49fa-9164-92dcf4135b99"}
             async with session.post(freya_url, json=my_json) as resp:
                 helper = await resp.text()
                 print(f"send message with trip id {trip.id}")
