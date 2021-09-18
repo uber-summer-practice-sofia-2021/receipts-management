@@ -4,8 +4,6 @@ from controllers.Database_Controller import Database_Controller
 from server import server
 from flask import g
 
-Receipt.set_template_data(server.config['CONFIG_PATH'] + "/receipt_template.json") 
-
 def get_controller():
   controller = getattr(g, '_my_controller', None)
   if controller is None:
