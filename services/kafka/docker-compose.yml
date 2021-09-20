@@ -1,16 +1,16 @@
-version: '2'
+version: '3.7'
 services:
-  zookeeper:
-    image: wurstmeister/zookeeper:latest
-    ports:
-      - "2181:2181"
-  kafka:
-    image: wurstmeister/kafka:latest
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "test:1:1"
+  server:
+    container_name: python_devserver
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./src:/app
+    ports:
+      - target: 5000
+        published: 5000
+        protocol: tcp
+    environment:
+      - FLASK_APP=server.py
+      - FLASK_ENV=development
