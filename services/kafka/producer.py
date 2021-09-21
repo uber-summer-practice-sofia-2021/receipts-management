@@ -24,7 +24,7 @@ trip_IDs_topic = app.topic("test", key_type=None, value_type=TripID)
 
 
 ## each 1.0 seconds send values
-@app.timer(1.0)
+@app.timer(100000000000.0)
 async def send_value():
     await trip_IDs_topic.send(value=TripID(TripID(id="----------------send id:")))
     for i in range(1, 10):

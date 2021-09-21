@@ -17,7 +17,7 @@ class Controller:
     def PostReuqestToOrderService(self, payload):
         return self.get_order_info.post(payload)
 
-    def send_email(self, receipt):
+    def send_email(self, receipt, logger):
         # Replace sender@example.com with your "From" address. 
         # This address must be verified.
         SENDER = 'k.dimitrov.stag.bg@gmail.com'
@@ -25,7 +25,9 @@ class Controller:
 
         # Replace recipient@example.com with a "To" address. If your account 
         # is still in the sandbox, this address must be verified.
-        RECIPIENT  = receipt.data['clientEmail']
+        #RECIPIENT  = receipt.data['clientEmail']
+        RECIPIENT = receipt.data['clientEmail']
+        logger.debug(receipt.data['clientEmail'])
 
         # Replace smtp_username with your Amazon SES SMTP user name.
         USERNAME_SMTP = "AKIARCDXLZXXLXMYK6PU"
@@ -54,7 +56,8 @@ class Controller:
                     )
 
         # The HTML body of the email.
-        BODY_HTML = render_template("index.html", data = receipt.data)
+        #pdf = pdfkit.from_url(render_template("index.html", data = receipt.data, receiptId = receipt.receiptId))
+        BODY_HTML = render_template("email.html", data = receipt.data, receiptId = receipt.receiptId)
 
 
         # Create message container - the correct MIME type is multipart/alternative.
@@ -91,5 +94,3 @@ class Controller:
             print ("Error: ", e)
         else:
             print ("Email sent!")
-
-        return "Andibul morkov"

@@ -1,3 +1,93 @@
+$background-color: #ffd3b1;
+$primary-color: #f0f0f0;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
 body {
-    background: tomato;
+    .myline{
+        height: 1px;
+        height: 1px;
+        background-color: #E6E6E6;
+        margin: 0 auto;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(51,51,51,0.7763480392156863) 20%, rgba(0,0,0,0.7959558823529411) 50%, rgba(51,51,51,0.7763480392156863) 80%, rgba(255,255,255,0) 100%);
+    }
+
+    .mylines{
+        height: 1px;
+        height: 1px;
+        max-width: 70%;
+        background-color: #E6E6E6;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(51,51,51,0.7763480392156863) 20%, rgba(0,0,0,0.7959558823529411) 50%, rgba(51,51,51,0.7763480392156863) 80%, rgba(255,255,255,0) 100%);
+    }
+    .mylinesn{
+        height: 1px;
+        //max-width: 52%;
+        //margin-left: 17%;
+        max-width: 70%;
+        background-image: linear-gradient(90deg, #000, #000 75%, transparent 75%, transparent 100%);
+        background-size: 20px 1px;
+    }
+
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0px 0px 12px -1px rgba(0,0,0,0.21);
+    margin-top: 20px;
+    max-width: 900px;
+    margin:auto;
+    margin-top:50px;
+    -webkit-font-smoothing: antialiased;
+
+    .message{
+        margin-top:20px;
+        background: linear-gradient(180deg, rgba(255,211,177,1) 22%, rgba(253,187,45,0) 100%);
+        .container{
+            margin-left:10px;
+            padding-top:20px;
+            width: 90%;
+            padding-top:20px;
+
+            .info{
+                margin-top:20px;
+            }
+
+            .logo{
+                margin-top:-70px;
+                background-image: url("../imgs/drawing2.svg");
+                background-position: 0px -60px;
+                background-repeat: no-repeat;
+                height: 300px;
+                width: 350px;
+                background-size: 250px;
+            }
+        }
+    }
+    .data{
+        font-family:Roboto, sans-serif;
+        font-weight: bold;
+        line-height: normal;
+        padding-top:30px;
+        margin-left:50px;
+        .container{
+            word-wrap: break-word;
+        }
+    }
+
+    .map{
+        font-family:Roboto, sans-serif;
+        font-weight: bold;
+        line-height: normal;
+        padding-top:30px;
+        margin-left:50px;
+        margin-top:30px;
+        padding-bottom: 50px;
+
+        .container{
+            word-wrap: break-word;
+            .mimage{
+                max-width:fit-content;
+                box-shadow: 0px 0px 12px -1px rgba(0,0,0,0.21);
+                margin:30px auto;
+                margin-bottom:10px;
+                margin-top:-20px;
+            }
+        }
+    }
 }

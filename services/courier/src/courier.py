@@ -14,17 +14,17 @@ def hello():
 #Simulates courier API interacting with us
 @server.route("/send", methods=["POST"])
 def sendTripInfo():
-  file = {"tripId":"8d0c2dbc-262f-4998-9554-8149319a1058"} #this isn't (so no inserts)
-  #file = {"tripId":"97df8470-1a84-49fa-9164-92dcf4135b99"} #this is already in db for testing
-  requests.post("http://receipts:5000/receive_trip_id", json = file)
-  return "Successfully Sent"
+  file = {"tripId":"b364522a-b588-41dc-8a9d-6984878f1454"} #this is already in db for testing
+  response = requests.post("http://receipts:5000/receive_trip_id", json = file)
+  server.logger.info(response.status_code)
+  return str(response.status_code)
 
 @server.route("/get_trip_info", methods = ["POST"])
 def sendAllInfo():
   tripId = request.json
   with open(os.path.join(server.root_path, "fixtures", "{0}.json").format(tripId)) as file:
     trip_info = json.load(file)
-  server.logger.debug(trip_info)
+  server.logger.info(trip_info)
   return trip_info
 
 if __name__ == "__main__":
