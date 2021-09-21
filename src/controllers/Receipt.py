@@ -56,6 +56,7 @@ class Receipt:
                 "courierID": {"type": "string", "pattern":u_id_expr},
                 "courierPhone": {"type": "string"},
                 "courierEmail": {"type": "string", "pattern":email_expr},
+                "distance": {"type": "number"},
                 "createdAt": {"type": "string"},
                 "completedAt": {"type": "string"}
             },
