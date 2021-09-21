@@ -21,8 +21,7 @@
                 <div class="info">
                     <div class="row">
                         <div class="col-sm">
-                            <h1>Thank you for your order, 
-                            <br>{{data['clientName']}}!</h1>
+                            <h1>Thank you for your order!</h1>
                         </div>
                         <div class="col-sm-4">
                             <div class="logo"></div>
@@ -50,21 +49,11 @@
             <br>
             <div class="row">
                 <div class="col-sm-2">
-                    <h3>Courier:</h3>
-                </div>
-                <div class="col-sm">
-                    <p>Name: {{data['courierName']}}</p>
-                </div>
-            </div>
-            <div class="mylines"></div>
-            <br>
-            <div class="row">
-                <div class="col-sm-2">
                     <h3>Delivery:</h3>
                 </div>
                 <div class="col-sm">
                     <p>Created: {{data['createdAt']}}</p>
-                    <p>Delivered: {{data['deliveredAt']}}</p>
+                    <p>Delivered: {{data['completedAt']}}</p>
                     <p>Type: {{data['deliveryType']}}</p>
                     <p>Distance: {{data['distance']}} m</p>
                 </div>

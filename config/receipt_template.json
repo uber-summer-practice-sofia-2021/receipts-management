@@ -2,7 +2,7 @@
     "clientName":"tagged",
     "clientEmail":"tagged",
     "phoneNumber":"tagged",
-    "orderId":"tagged",
+    "orderID":"tagged",
 
     "from": {
         "latitude":"tagged",
@@ -24,7 +24,7 @@
     },
 
     "deliveryType":"tagged",
-    "courierId":"tagged",
+    "courierID":"tagged",
     "courierName":"tagged",
     "courier_phone":"",
     "courier_email":"",

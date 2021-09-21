@@ -18,14 +18,14 @@ class Receipt:
     phone_expr = "(\+?359[- ]?)?(((\(0?8[4-9]\)|0?8[7-9])[- ]?(\d{5}[- ]?\d{2}|\d{4}[- ]?\d{3}|\d{3}[- ]?\d{4}|\d{2}[- ]?\d{5}|\d[- ]?\d{6}|\d{2}[- ]?\d{3}[- ]?\d{2}))|((\(0[7-8]00\)|0[7-8]00)[- ]?\d{5})|((\(02\)|02)[- ]?\d{3}[- ]?\d{4})|((\(0\d{2}\)|0\d{2})[- ]?[- ]?(\d{2}[- ]?\d{4}|\d{3}[- ]?\d{3}))|((\(0\d{3}\)|0\d{3})[- ]?\d{5})|((\(0\d{4}\)|0\d{4})[- ]?\d{4}))"
     u_id_expr = "[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}"
     email_expr = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*)@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"
-    
+
     template_data = {
         "type": "object",
             "properties": {
                 "clientName": {"type": "string"},
                 "clientEmail": {"type": "string","pattern": email_expr},
                 "phoneNumber": {"type": "string","pattern":phone_expr},
-                "orderId": {"type": "string","pattern":u_id_expr},
+                "orderID": {"type": "string","pattern":u_id_expr},
                 "from": {
                     "type": "object","properties": {
                         "latitude": {"type": "number"},
@@ -53,15 +53,13 @@ class Receipt:
                         }
                 },
                 "deliveryType": {"type": "string"},
-                "courierId": {"type": "string", "pattern":u_id_expr},
-                "courierName": {"type": "string"},
-                "courier_phone": {"type": "string"},
-                "courier_email": {"type": "string", "pattern":email_expr},
-                "distance": {"type": "number"},
+                "courierID": {"type": "string", "pattern":u_id_expr},
+                "courierPhone": {"type": "string"},
+                "courierEmail": {"type": "string", "pattern":email_expr},
                 "createdAt": {"type": "string"},
-                "deliveredAt": {"type": "string"}
+                "completedAt": {"type": "string"}
             },
-            "required": ["clientName","clientEmail","phoneNumber","orderId","from","to","deliveryType","courierId","courierName","createdAt","deliveredAt"]
+            "required": ["clientName","clientEmail","phoneNumber","orderID","from","to","deliveryType","courierID","createdAt","completedAt"]
         }
 
     def __init__(self, courier_response, order_response, logger, trip_id=None, alt=False):
@@ -81,8 +79,8 @@ class Receipt:
                 self.receiptId = trip_id
                 self.__assign_data(courier_response, order_response)
                 jsonschema.validate(self.data, Receipt.template_data)
+                self.__check_date_time(logger)
                 logger.info("Validated Data")
-                self.__check_date_time()
                 self.get_map(logger)
                 self.calculate_price()
             except Exception as e:
@@ -99,13 +97,17 @@ class Receipt:
                 self.data[key] = courier_response[key]
             elif key in order_response:
                 self.data[key] = order_response[key]
-            
-    def __check_date_time(self):
+
+    def __check_date_time(self, logger):
         try:
             dateutil.parser.isoparse(self.data['createdAt'])
-            dateutil.parser.isoparse(self.data['deliveredAt'])
-            self.data['createdAt'] = datetime.datetime.strptime(self.data['createdAt'], "%Y-%m-%dT%H:%M:%S.%fZ")
-            self.data['deliveredAt'] = datetime.datetime.strptime(self.data['deliveredAt'], "%Y-%m-%dT%H:%M:%S.%fZ")
+            dateutil.parser.isoparse(self.data['completedAt'])
+            logger.info("got to here")
+            #"%Y-%m-%dT%H:%M:%S.%fZ"
+            self.data['createdAt'] = datetime.datetime.strptime(self.data['createdAt'], "%Y-%m-%dT%H:%M:%S.%f")
+            self.data['completedAt'] = datetime.datetime.strptime(self.data['completedAt'], "%Y-%m-%dT%H:%M:%S.%f")
+            if(self.data['completedAt']<self.data['createdAt']):
+                raise ValidationException("The delivery couldn't have been completed before it was created.")
         except Exception as e:
             raise ValidationException("DateTime is invalid RFC 3339 format.") from e
 
@@ -143,7 +145,7 @@ class Receipt:
             base_price = round(base_price, 2)
 
             #calculate days
-            time = self.data['deliveredAt']-self.data['createdAt']
+            time = self.data['completedAt']-self.data['createdAt']
 
             total_price = base_price+base_fare
             if(time.days>3):

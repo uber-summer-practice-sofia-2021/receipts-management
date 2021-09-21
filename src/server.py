@@ -27,20 +27,22 @@ def load_template(trip_id):
 def get_all_info(tripId):
   try:
     #Request to Courier
-    courierResponse = get_controller().PostRequestToCourierService(tripId)
+    courierResponse = get_controller().GetRequestToCourierService(tripId)
     courierResponse = courierResponse.json()
     server.logger.info("Got courier response.")
 
     #Request to Order
-    orderResponse = get_controller().PostReuqestToOrderService(courierResponse['orderId'])
+    orderResponse = get_controller().GetReuqestToOrderService(courierResponse['orderID'])
     orderResponse = orderResponse.json()
     server.logger.info("Got order response.")
 
     #Creating a Receipt
     currentReceipt = Receipt(courierResponse, orderResponse, server.logger, trip_id=tripId)
+    server.logger.info("A receipt was made.")
 
     #Insert into Database
     get_db_controller().insert_into_db(currentReceipt, server.logger)
+    server.logger.info("Inserted into database.")
 
     #Sent Email
     get_controller().send_email(currentReceipt)
@@ -59,7 +61,7 @@ def get_all_info(tripId):
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
   trip = request.json
-  trip = trip['tripId'] 
+  trip = trip['tripID'] 
   return get_all_info(trip)
 
 @server.route("/")
