@@ -1,3 +1,5 @@
+# kakka listners problem
+https://rmoff.net/2018/08/02/kafka-listeners-explained/
 # kafka
 Run the producer from ``` /services/kafka/ ```
 ```
@@ -64,3 +66,6 @@ The topic is called ```test```.
 ```
 ./kafka-console-consumer.sh --topic test --from-beginning --bootstrap-server localhost:9092
 ```
+
+## example docker template
+https://github.com/uber-summer-practice-sofia-2021/uber-summer-dockerfiles
