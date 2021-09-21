@@ -1,16 +1,16 @@
 {
     "clientName": "John Nash",
     "from": {
-        "latitude": 42.68450281127661,
+        "latitude": 42.78450281127661,
         "longitude": 23.304486819713325,
         "addressName": "Mladost 5, Sofia"
     },
     "to": {
-        "latitude": 42.67816927414641,
-        "longitude": 23.286343399691088,
+        "latitude": 44.67816927414641,
+        "longitude": 22.28634339969158,
         "addressName": "Mladost 1, Sofia"
     },
-    "clientEmail": "lubengeorgiev071@gmail.com",
+    "clientEmail": "gamingdeathadder98@gmail.com",
     "phoneNumber": "08454643542",
     "dimensions": {
         "length": 5,
