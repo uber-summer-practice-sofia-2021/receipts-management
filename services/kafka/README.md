@@ -8,6 +8,11 @@ Run the consumer from ``` /services/kafka/ ```
 python consumer.py worker -l info --without-web
 ```
 
+=======
+Send a single mesage
+```
+faust consumer.py send @read_trip_IDs "{"tripId": "97df8470-1a84-49fa-9164-92dcf4135b99"}"
+```
 ## set-up
 0. run kafka in docker container and create single partition topic
 
