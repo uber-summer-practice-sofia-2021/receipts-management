@@ -1,5 +1,6 @@
 from clients.http import HTTPClient
 from flask import render_template
+import os
 import smtplib  
 import email.utils
 from email.mime.multipart import MIMEMultipart
@@ -8,16 +9,16 @@ from email.mime.text import MIMEText
 
 class Controller:
     def __init__(self, pathToConfig):
-        self.get_order_info = HTTPClient(pathToConfig, 'get_order_info')
-        self.get_trip_info = HTTPClient(pathToConfig, 'get_trip_info')
+        self.get_order_info = HTTPClient(pathToConfig, 'ORDER_INFO')
+        self.get_trip_info = HTTPClient(pathToConfig, 'TRIP_INFO')
     
-    def PostRequestToCourierService(self, payload):
-        return self.get_trip_info.post(payload)
+    def GetRequestToCourierService(self, payload):
+        return self.get_trip_info.get(payload)
 
-    def PostReuqestToOrderService(self, payload):
-        return self.get_order_info.post(payload)
+    def GetReuqestToOrderService(self, payload):
+        return self.get_order_info.get(payload)
 
-    def send_email(self, receipt, logger):
+    def send_email(self, receipt):
         # Replace sender@example.com with your "From" address. 
         # This address must be verified.
         SENDER = 'k.dimitrov.stag.bg@gmail.com'
@@ -27,13 +28,12 @@ class Controller:
         # is still in the sandbox, this address must be verified.
         #RECIPIENT  = receipt.data['clientEmail']
         RECIPIENT = receipt.data['clientEmail']
-        logger.debug(receipt.data['clientEmail'])
 
         # Replace smtp_username with your Amazon SES SMTP user name.
-        USERNAME_SMTP = "AKIARCDXLZXXLXMYK6PU"
+        USERNAME_SMTP = os.environ['USERNAME_SMTP']
 
         # Replace smtp_password with your Amazon SES SMTP password.
-        PASSWORD_SMTP = "BBdRZ1OVLjcov7v+xZT937yN+QXxajgP0mJseVAOSk3E"
+        PASSWORD_SMTP = os.environ['PASSWORD_SMTP']
 
         # (Optional) the name of a configuration set to use for this message.
         # If you comment out this line, you also need to remove or comment out

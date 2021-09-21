@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, os
 
 class HTTPClient:
     def __init__(self, config_file_path, serviceIdentifier):
@@ -12,10 +12,10 @@ class HTTPClient:
             self.request = request
             break
 
-    def post(self, payload):
+    def get(self, payload):
         response = 0
         for _ in range(self.request['retry_limit']):
-            response = requests.post(self.request['endpoint'], json=payload, timeout=self.request['timeout'])
+            response = requests.get(os.environ[f"{self.request['identifier']}"] + payload, timeout=self.request['timeout'])
 
             # Assert that there were no errors
             response.raise_for_status()

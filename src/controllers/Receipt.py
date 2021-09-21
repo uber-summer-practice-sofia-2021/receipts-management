@@ -7,10 +7,10 @@ import googlemaps
 import traceback
 import requests
 from PIL import Image
-import io, base64
+import io, base64, os
 import datetime
 
-API_KEY = "AIzaSyCjgv44zAWLITV1FOI0k1OonveM9Rf2hNE"
+API_KEY = os.environ['MAPS_KEY']
 map_client = googlemaps.Client(API_KEY)
 
 

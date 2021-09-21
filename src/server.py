@@ -43,7 +43,7 @@ def get_all_info(tripId):
     get_db_controller().insert_into_db(currentReceipt, server.logger)
 
     #Sent Email
-    get_controller().send_email(currentReceipt, server.logger)
+    get_controller().send_email(currentReceipt)
     server.logger.info("Sent email.")
     return "Successfully Received"
   except (ValidationException, sqlite3.IntegrityError)  as e:
