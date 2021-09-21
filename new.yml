@@ -51,6 +51,13 @@ services:
     depends_on:
       - kafka
       - zookeeper 
+    environment:
+      - TOPIC=test
+      - APP_ID=freya_kafka_consumer
+      - BROKERS=kafka://kafka:29092
+      - FREYA_URL=http://receipts:5000/receive_trip_id
+
+
 
     volumes:
       - ./services/kafka/src:/app

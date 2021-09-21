@@ -1,5 +1,13 @@
 # kakka listners problem
 https://rmoff.net/2018/08/02/kafka-listeners-explained/
+
+# ENVs
+- APP_ID:    the id of the faust app / de facto the consumer group
+- FREYA_URL: the link to our main endpoint
+- BROKERS:   ';' separated brokers URLs
+- TOPIC:     the name of our main topic - the one fed by the couriers
+- TOPIC1:    ... eventually the retry queue
+
 # kafka
 Run the producer from ``` /services/kafka/ ```
 ```
@@ -69,3 +77,4 @@ The topic is called ```test```.
 
 ## example docker template
 https://github.com/uber-summer-practice-sofia-2021/uber-summer-dockerfiles
+
