@@ -10,8 +10,10 @@ RUN pip install -r requirements.txt
 
 COPY src/ .
 
-EXPOSE 5000
-ENV FLASK_ENV=development
-ENV FLASK_APP=server.py
+EXPOSE 2181
+EXPOSE 5000 
+EXPOSE 9092 
 
-CMD ["flask", "run", "--host=0.0.0.0"]
+# CMD ["python", "consumer.py", "worker", "-l", "info", "--without-web"]
+
+CMD ["tail", "-f", "/dev/null"]

@@ -10,7 +10,7 @@ import faust
 
 app = faust.App(
     "kafka_producer",
-    broker="kafka://localhost:9092",
+    broker="kafka://kafka:29092",
     topic_partitions=1,
 )
 

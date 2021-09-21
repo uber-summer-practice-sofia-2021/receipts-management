@@ -11,7 +11,7 @@ import aiohttp
 
 app = faust.App(
     "kafka_consumer",
-    broker="kafka://localhost:9092",
+    broker="kafka://kafka:29092",
     topic_partitions=1,
 )
 
