@@ -41,7 +41,7 @@ variables:
   PASSWORD_SMTP: BBdRZ1OVLjcov7v+xZT937yN+QXxajgP0mJseVAOSk3E
   MAPS_KEY: AIzaSyCjTOWTvU-3_qpW12GHY0V35EHcSzoPTIM
   ORDER_INFO: http://order-Publi-DVY752SUI77Y-1625392201.eu-west-1.elb.amazonaws.com/orders/
-  TRIP_INFO: http://couri-Publi-1IGOZDL1P729E-291147074.eu-west-1.elb.amazonaws.com/trips/
+  TRIP_INFO: http://couri-Publi-1IGOZDL1P729E-291147074.eu-west-1.elb.amazonaws.com/
 
 #secrets:                      # Pass secrets from AWS Systems Manager (SSM) Parameter Store.
 #  GITHUB_TOKEN: GITHUB_TOKEN  # The key is the name of the environment variable, the value is the name of the SSM parameter.

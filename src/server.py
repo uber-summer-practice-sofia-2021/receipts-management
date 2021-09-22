@@ -26,10 +26,15 @@ def load_template(trip_id):
 
 def get_all_info(tripId):
   try:
-    #Request to Courier
-    courierResponse = get_controller().GetRequestToCourierService(tripId)
+    #Request to Couriers
+    courierResponse = get_controller().GetRequestToCourierService("trips/"+tripId)
     courierResponse = courierResponse.json()
     server.logger.info("Got courier response.")
+
+    #Request to Couriers for the name
+    courierName = get_controller().GetRequestToCourierService("couriers/"+courierResponse['courierID'])
+    courierName = courierName.json()
+    courierResponse['courierName'] = courierName['courierName']
 
     #Request to Order
     orderResponse = get_controller().GetReuqestToOrderService(courierResponse['orderID'])

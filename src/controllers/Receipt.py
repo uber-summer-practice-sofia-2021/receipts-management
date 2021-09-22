@@ -18,7 +18,7 @@ class Receipt:
     phone_expr = "(\+?359[- ]?)?(((\(0?8[4-9]\)|0?8[7-9])[- ]?(\d{5}[- ]?\d{2}|\d{4}[- ]?\d{3}|\d{3}[- ]?\d{4}|\d{2}[- ]?\d{5}|\d[- ]?\d{6}|\d{2}[- ]?\d{3}[- ]?\d{2}))|((\(0[7-8]00\)|0[7-8]00)[- ]?\d{5})|((\(02\)|02)[- ]?\d{3}[- ]?\d{4})|((\(0\d{2}\)|0\d{2})[- ]?[- ]?(\d{2}[- ]?\d{4}|\d{3}[- ]?\d{3}))|((\(0\d{3}\)|0\d{3})[- ]?\d{5})|((\(0\d{4}\)|0\d{4})[- ]?\d{4}))"
     u_id_expr = "[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}"
     email_expr = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*)@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"
-
+    
     template_data = {
         "type": "object",
             "properties": {
@@ -54,12 +54,13 @@ class Receipt:
                 },
                 "deliveryType": {"type": "string"},
                 "courierID": {"type": "string", "pattern":u_id_expr},
+                "courierName":{"type": "string"},
                 "courierPhone": {"type": "string"},
                 "courierEmail": {"type": "string", "pattern":email_expr},
                 "createdAt": {"type": "string"},
                 "completedAt": {"type": "string"}
             },
-            "required": ["clientName","clientEmail","phoneNumber","orderID","from","to","deliveryType","courierID","createdAt","completedAt"]
+            "required": ["clientName","clientEmail","phoneNumber","orderID","from","to","deliveryType","courierID","courierName","createdAt","completedAt"]
         }
 
     def __init__(self, courier_response, order_response, logger, trip_id=None, alt=False):
@@ -97,12 +98,11 @@ class Receipt:
                 self.data[key] = courier_response[key]
             elif key in order_response:
                 self.data[key] = order_response[key]
-
+            
     def __check_date_time(self, logger):
         try:
             dateutil.parser.isoparse(self.data['createdAt'])
             dateutil.parser.isoparse(self.data['completedAt'])
-            logger.info("got to here")
             #"%Y-%m-%dT%H:%M:%S.%fZ"
             self.data['createdAt'] = datetime.datetime.strptime(self.data['createdAt'], "%Y-%m-%dT%H:%M:%S.%f")
             self.data['completedAt'] = datetime.datetime.strptime(self.data['completedAt'], "%Y-%m-%dT%H:%M:%S.%f")
@@ -116,21 +116,44 @@ class Receipt:
         end = (self.data['to']['latitude'], self.data['to']['longitude'])
         try:
             new_distance = map_client.distance_matrix(origins = start, destinations = end, mode = "driving")
-            new_direction = map_client.directions(origin = start, destination = end, mode = "driving")
-            self.data['distance'] = new_distance['rows'][0]['elements'][0]['distance']['value']
-            map_url= "https://maps.googleapis.com/maps/api/staticmap?size=600x400"
-            map_url+="&markers=color:purple%7C{0},{1}".format(start[0], start[1])
-            map_url+="&markers=color:black%7C{0},{1}".format(end[0], end[1])
-            encoded_polyline = str(new_direction[0]['overview_polyline']['points']).replace("\\\\", "\\")
-            map_url+="&path=enc:"+encoded_polyline
-            map_url+="&key="+API_KEY
-            self.data['img_url'] = map_url
-            response = requests.get(map_url, stream=True)
-            img_response = Image.open(io.BytesIO(response.content))
-            img_data = io.BytesIO()
-            img_response.save(img_data, "PNG")
-            encoded_image = base64.b64encode(img_data.getvalue())
-            self.data['img'] =  encoded_image.decode('utf-8')
+
+            if(new_distance['rows'][0]['elements'][0]['status']=='ZERO_RESULTS'):
+                start = self.data['from']['addressName']
+                end = self.data['to']['addressName']
+                new_distance = map_client.distance_matrix(origins = start, destinations = end, mode = "driving")
+                new_direction = map_client.directions(origin = start, destination = end, mode = "driving")
+                start = (new_direction[0]['legs'][0]['start_location']['lat'], new_direction[0]['legs'][0]['start_location']['lng'])
+                end = (new_direction[0]['legs'][0]['end_location']['lat'], new_direction[0]['legs'][0]['end_location']['lng'])
+                self.data['distance'] = new_distance['rows'][0]['elements'][0]['distance']['value']
+                map_url= "https://maps.googleapis.com/maps/api/staticmap?size=600x400"
+                map_url+="&markers=color:purple%7C{0},{1}".format(start[0], start[1])
+                map_url+="&markers=color:black%7C{0},{1}".format(end[0], end[1])
+                encoded_polyline = str(new_direction[0]['overview_polyline']['points']).replace("\\\\", "\\")
+                map_url+="&path=enc:"+encoded_polyline
+                map_url+="&key="+API_KEY
+                self.data['img_url'] = map_url
+                response = requests.get(map_url, stream=True)
+                img_response = Image.open(io.BytesIO(response.content))
+                img_data = io.BytesIO()
+                img_response.save(img_data, "PNG")
+                encoded_image = base64.b64encode(img_data.getvalue())
+                self.data['img'] =  encoded_image.decode('utf-8')
+            else:
+                new_direction = map_client.directions(origin = start, destination = end, mode = "driving")
+                self.data['distance'] = new_distance['rows'][0]['elements'][0]['distance']['value']
+                map_url= "https://maps.googleapis.com/maps/api/staticmap?size=600x400"
+                map_url+="&markers=color:purple%7C{0},{1}".format(start[0], start[1])
+                map_url+="&markers=color:black%7C{0},{1}".format(end[0], end[1])
+                encoded_polyline = str(new_direction[0]['overview_polyline']['points']).replace("\\\\", "\\")
+                map_url+="&path=enc:"+encoded_polyline
+                map_url+="&key="+API_KEY
+                self.data['img_url'] = map_url
+                response = requests.get(map_url, stream=True)
+                img_response = Image.open(io.BytesIO(response.content))
+                img_data = io.BytesIO()
+                img_response.save(img_data, "PNG")
+                encoded_image = base64.b64encode(img_data.getvalue())
+                self.data['img'] =  encoded_image.decode('utf-8')
         except Exception as e:
             logger.warn(traceback.format_exc())
             raise ValidationException("Invalid coordinates and/or distance") from e
@@ -140,13 +163,14 @@ class Receipt:
             base_fare = 5 #this is for the delivery to the town itself
             VAT = 0.2
             tax_per_meter = 0.0004
+            if(self.data['deliveryType']=='EXPRESS'):
+                tax_per_meter=0.001
             base_price = self.data['distance']
             base_price*= tax_per_meter
             base_price = round(base_price, 2)
 
             #calculate days
             time = self.data['completedAt']-self.data['createdAt']
-
             total_price = base_price+base_fare
             if(time.days>3):
                 if(time.days>6):
