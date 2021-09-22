@@ -7,10 +7,10 @@ import googlemaps
 import traceback
 import requests
 from PIL import Image
-import io, base64
+import io, base64, os
 import datetime
 
-API_KEY = "AIzaSyCjgv44zAWLITV1FOI0k1OonveM9Rf2hNE"
+API_KEY = os.environ['MAPS_KEY']
 map_client = googlemaps.Client(API_KEY)
 
 
@@ -25,7 +25,7 @@ class Receipt:
                 "clientName": {"type": "string"},
                 "clientEmail": {"type": "string","pattern": email_expr},
                 "phoneNumber": {"type": "string","pattern":phone_expr},
-                "orderId": {"type": "string","pattern":u_id_expr},
+                "orderID": {"type": "string","pattern":u_id_expr},
                 "from": {
                     "type": "object","properties": {
                         "latitude": {"type": "number"},
@@ -53,15 +53,14 @@ class Receipt:
                         }
                 },
                 "deliveryType": {"type": "string"},
-                "courierId": {"type": "string", "pattern":u_id_expr},
-                "courierName": {"type": "string"},
-                "courier_phone": {"type": "string"},
-                "courier_email": {"type": "string", "pattern":email_expr},
-                "distance": {"type": "number"},
+                "courierID": {"type": "string", "pattern":u_id_expr},
+                "courierName":{"type": "string"},
+                "courierPhone": {"type": "string"},
+                "courierEmail": {"type": "string", "pattern":email_expr},
                 "createdAt": {"type": "string"},
-                "deliveredAt": {"type": "string"}
+                "completedAt": {"type": "string"}
             },
-            "required": ["clientName","clientEmail","phoneNumber","orderId","from","to","deliveryType","courierId","courierName","createdAt","deliveredAt"]
+            "required": ["clientName","clientEmail","phoneNumber","orderID","from","to","deliveryType","courierID","courierName","createdAt","completedAt"]
         }
 
     def __init__(self, courier_response, order_response, logger, trip_id=None, alt=False):
@@ -81,8 +80,8 @@ class Receipt:
                 self.receiptId = trip_id
                 self.__assign_data(courier_response, order_response)
                 jsonschema.validate(self.data, Receipt.template_data)
+                self.__check_date_time(logger)
                 logger.info("Validated Data")
-                self.__check_date_time()
                 self.get_map(logger)
                 self.calculate_price()
             except Exception as e:
@@ -100,12 +99,15 @@ class Receipt:
             elif key in order_response:
                 self.data[key] = order_response[key]
             
-    def __check_date_time(self):
+    def __check_date_time(self, logger):
         try:
             dateutil.parser.isoparse(self.data['createdAt'])
-            dateutil.parser.isoparse(self.data['deliveredAt'])
-            self.data['createdAt'] = datetime.datetime.strptime(self.data['createdAt'], "%Y-%m-%dT%H:%M:%S.%fZ")
-            self.data['deliveredAt'] = datetime.datetime.strptime(self.data['deliveredAt'], "%Y-%m-%dT%H:%M:%S.%fZ")
+            dateutil.parser.isoparse(self.data['completedAt'])
+            #"%Y-%m-%dT%H:%M:%S.%fZ"
+            self.data['createdAt'] = datetime.datetime.strptime(self.data['createdAt'], "%Y-%m-%dT%H:%M:%S.%f")
+            self.data['completedAt'] = datetime.datetime.strptime(self.data['completedAt'], "%Y-%m-%dT%H:%M:%S.%f")
+            if(self.data['completedAt']<self.data['createdAt']):
+                raise ValidationException("The delivery couldn't have been completed before it was created.")
         except Exception as e:
             raise ValidationException("DateTime is invalid RFC 3339 format.") from e
 
@@ -114,21 +116,44 @@ class Receipt:
         end = (self.data['to']['latitude'], self.data['to']['longitude'])
         try:
             new_distance = map_client.distance_matrix(origins = start, destinations = end, mode = "driving")
-            new_direction = map_client.directions(origin = start, destination = end, mode = "driving")
-            self.data['distance'] = new_distance['rows'][0]['elements'][0]['distance']['value']
-            map_url= "https://maps.googleapis.com/maps/api/staticmap?size=600x400"
-            map_url+="&markers=color:purple%7C{0},{1}".format(start[0], start[1])
-            map_url+="&markers=color:black%7C{0},{1}".format(end[0], end[1])
-            encoded_polyline = str(new_direction[0]['overview_polyline']['points']).replace("\\\\", "\\")
-            map_url+="&path=enc:"+encoded_polyline
-            map_url+="&key="+API_KEY
-            self.data['img_url'] = map_url
-            response = requests.get(map_url, stream=True)
-            img_response = Image.open(io.BytesIO(response.content))
-            img_data = io.BytesIO()
-            img_response.save(img_data, "PNG")
-            encoded_image = base64.b64encode(img_data.getvalue())
-            self.data['img'] =  encoded_image.decode('utf-8')
+
+            if(new_distance['rows'][0]['elements'][0]['status']=='ZERO_RESULTS'):
+                start = self.data['from']['addressName']
+                end = self.data['to']['addressName']
+                new_distance = map_client.distance_matrix(origins = start, destinations = end, mode = "driving")
+                new_direction = map_client.directions(origin = start, destination = end, mode = "driving")
+                start = (new_direction[0]['legs'][0]['start_location']['lat'], new_direction[0]['legs'][0]['start_location']['lng'])
+                end = (new_direction[0]['legs'][0]['end_location']['lat'], new_direction[0]['legs'][0]['end_location']['lng'])
+                self.data['distance'] = new_distance['rows'][0]['elements'][0]['distance']['value']
+                map_url= "https://maps.googleapis.com/maps/api/staticmap?size=600x400"
+                map_url+="&markers=color:purple%7C{0},{1}".format(start[0], start[1])
+                map_url+="&markers=color:black%7C{0},{1}".format(end[0], end[1])
+                encoded_polyline = str(new_direction[0]['overview_polyline']['points']).replace("\\\\", "\\")
+                map_url+="&path=enc:"+encoded_polyline
+                map_url+="&key="+API_KEY
+                self.data['img_url'] = map_url
+                response = requests.get(map_url, stream=True)
+                img_response = Image.open(io.BytesIO(response.content))
+                img_data = io.BytesIO()
+                img_response.save(img_data, "PNG")
+                encoded_image = base64.b64encode(img_data.getvalue())
+                self.data['img'] =  encoded_image.decode('utf-8')
+            else:
+                new_direction = map_client.directions(origin = start, destination = end, mode = "driving")
+                self.data['distance'] = new_distance['rows'][0]['elements'][0]['distance']['value']
+                map_url= "https://maps.googleapis.com/maps/api/staticmap?size=600x400"
+                map_url+="&markers=color:purple%7C{0},{1}".format(start[0], start[1])
+                map_url+="&markers=color:black%7C{0},{1}".format(end[0], end[1])
+                encoded_polyline = str(new_direction[0]['overview_polyline']['points']).replace("\\\\", "\\")
+                map_url+="&path=enc:"+encoded_polyline
+                map_url+="&key="+API_KEY
+                self.data['img_url'] = map_url
+                response = requests.get(map_url, stream=True)
+                img_response = Image.open(io.BytesIO(response.content))
+                img_data = io.BytesIO()
+                img_response.save(img_data, "PNG")
+                encoded_image = base64.b64encode(img_data.getvalue())
+                self.data['img'] =  encoded_image.decode('utf-8')
         except Exception as e:
             logger.warn(traceback.format_exc())
             raise ValidationException("Invalid coordinates and/or distance") from e
@@ -138,13 +163,14 @@ class Receipt:
             base_fare = 5 #this is for the delivery to the town itself
             VAT = 0.2
             tax_per_meter = 0.0004
+            if(self.data['deliveryType']=='EXPRESS'):
+                tax_per_meter=0.001
             base_price = self.data['distance']
             base_price*= tax_per_meter
             base_price = round(base_price, 2)
 
             #calculate days
-            time = self.data['deliveredAt']-self.data['createdAt']
-
+            time = self.data['completedAt']-self.data['createdAt']
             total_price = base_price+base_fare
             if(time.days>3):
                 if(time.days>6):

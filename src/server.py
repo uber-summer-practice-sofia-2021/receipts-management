@@ -26,24 +26,31 @@ def load_template(trip_id):
 
 def get_all_info(tripId):
   try:
-    #Request to Courier
-    courierResponse = get_controller().PostRequestToCourierService(tripId)
+    #Request to Couriers
+    courierResponse = get_controller().GetRequestToCourierService("trips/"+tripId)
     courierResponse = courierResponse.json()
     server.logger.info("Got courier response.")
 
+    #Request to Couriers for the name
+    courierName = get_controller().GetRequestToCourierService("couriers/"+courierResponse['courierID'])
+    courierName = courierName.json()
+    courierResponse['courierName'] = courierName['courierName']
+
     #Request to Order
-    orderResponse = get_controller().PostReuqestToOrderService(courierResponse['orderId'])
+    orderResponse = get_controller().GetReuqestToOrderService(courierResponse['orderID'])
     orderResponse = orderResponse.json()
     server.logger.info("Got order response.")
 
     #Creating a Receipt
     currentReceipt = Receipt(courierResponse, orderResponse, server.logger, trip_id=tripId)
+    server.logger.info("A receipt was made.")
 
     #Insert into Database
     get_db_controller().insert_into_db(currentReceipt, server.logger)
+    server.logger.info("Inserted into database.")
 
     #Sent Email
-    get_controller().send_email(currentReceipt, server.logger)
+    get_controller().send_email(currentReceipt)
     server.logger.info("Sent email.")
     return "Successfully Received"
   except (ValidationException, sqlite3.IntegrityError)  as e:
@@ -59,7 +66,7 @@ def get_all_info(tripId):
 @server.route("/receive_trip_id", methods = ['POST'])
 def receiveTripId():
   trip = request.json
-  trip = trip['tripId'] 
+  trip = trip['tripID'] 
   return get_all_info(trip)
 
 @server.route("/")
