@@ -278,6 +278,6 @@ cython_debug/
 .ionide
 
 
-manifest.yml
+.manifest.yml
 
 # End of https://www.toptal.com/developers/gitignore/api/python,flask,visualstudiocode,emacs
