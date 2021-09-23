@@ -43,25 +43,6 @@ services:
       - FLASK_APP=orders.py
       - FLASK_ENV=development
 
-  consumer:
-    container_name: consumer
-    build:
-      context: ./services/kafka
-      dockerfile: Dockerfile
-    depends_on:
-      - kafka
-      - zookeeper 
-    environment:
-      - TOPIC=test
-      - APP_ID=freya_kafka_consumer
-      - BROKERS=kafka://kafka:29092
-      - FREYA_URL=http://receipts:5000/receive_trip_id
-
-
-
-    volumes:
-      - ./services/kafka/src:/app
-
   zookeeper:
     container_name: zookeeper
     image: wurstmeister/zookeeper:latest
@@ -79,14 +60,8 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "test:1:1"
-      # # see https://rmoff.net/2018/08/02/kafka-listeners-explained/
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092,OUTSIDE://localhost:9092
-      KAFKA_LISTENERS: INSIDE://:29092,OUTSIDE://:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
 
 networks:
   default:

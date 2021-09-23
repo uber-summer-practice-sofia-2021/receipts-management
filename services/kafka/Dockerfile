@@ -14,6 +14,11 @@ EXPOSE 2181
 EXPOSE 5000 
 EXPOSE 9092 
 
-# CMD ["python", "consumer.py", "worker", "-l", "info", "--without-web"]
 
-CMD ["tail", "-f", "/dev/null"]
+
+
+CMD ["python", "consumer.py", "worker", "-l", "info", "--without-web"]
+
+# CMD ["tail", "-f", "/dev/null"] 
+
+# CMD ["./start.sh"]

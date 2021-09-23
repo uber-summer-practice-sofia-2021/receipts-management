@@ -8,6 +8,10 @@ Don't forget to clean up ---> ```docker-compose.yml down```.
 Curl command for requesting our 'main' tripID receiving endpoint.
 ```
 curl -H "Content-type: application/json" -d '{"tripId":"trip"}' 'http://localhost:5000/receive_trip_id'
+
+curl -H "Content-type: application/json" -d '{"tripID":"5f6fd161-6b4d-462b-be85-89a26ec699a7"}' 'http://recei-publi-mgbjqgr3kcf-121656833.eu-west-1.elb.amazonaws.com/receive_trip_id'
+curl -H "Content-type: application/json" -d '{"tripID":"97df8470-1a84-49fa-9164-92dcf4135b99"}' 'http://recei-publi-mgbjqgr3kcf-121656833.eu-west-1.elb.amazonaws.com/receive_trip_id'
+
 ```
 ### windows
 The service simulation through Docker:

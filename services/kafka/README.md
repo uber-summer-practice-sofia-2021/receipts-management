@@ -1,6 +1,10 @@
-# kakka listners problem
+# kafka listners problem
 https://rmoff.net/2018/08/02/kafka-listeners-explained/
 
+# extra logs
+https://stackoverflow.com/questions/43663013/access-logs-of-a-killed-docker-container
+
+journalctl -u docker CONTAINER_NAME=consumer
 # ENVs
 - APP_ID:    the id of the faust app / de facto the consumer group
 - FREYA_URL: the link to our main endpoint
@@ -20,6 +24,7 @@ python consumer.py worker -l info --without-web
 Send a single mesage
 ```
 faust consumer.py send @read_trip_IDs "{"tripId": "97df8470-1a84-49fa-9164-92dcf4135b99"}"
+{"tripID": "97df8470-1a84-49fa-9164-92dcf4135b99"}
 ```
 ## set-up
 0. run kafka in docker container and create single partition topic
@@ -78,3 +83,9 @@ The topic is called ```test```.
 ## example docker template
 https://github.com/uber-summer-practice-sofia-2021/uber-summer-dockerfiles
 
+
+## maybe notes
+https://janakiev.com/blog/python-shell-commands/
+
+https://www.youtube.com/watch?v=y4wowEQd4Os&t=843s
+https://www.youtube.com/watch?v=Evrl9Vux31k
