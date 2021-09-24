@@ -89,3 +89,15 @@ https://janakiev.com/blog/python-shell-commands/
 
 https://www.youtube.com/watch?v=y4wowEQd4Os&t=843s
 https://www.youtube.com/watch?v=Evrl9Vux31k
+
+
+./kafka-console-producer.sh --topic test --bootstrap-server 
+./kafka-console-consumer.sh --topic trips --bootstrap-server b-2.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:9092,b-1.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:9092
+./kafka-console-producer.sh --topic trips --broker-list b-2.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:9092,b-1.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:9092
+
+
+./kafka-topics.sh --zookeeper z-2.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181,z-3.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181,z-1.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181 --create --topic trips --partitions 1 --replication-factor 1
+
+./kafka-topics.sh --zookeeper z-2.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181,z-3.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181,z-1.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181 --create --topic trips --partitions 1 --replication-factor 1
+z-2.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181,z-3.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181,z-1.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181
+z-2.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181,z-3.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181,z-1.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181

@@ -1,0 +1,76 @@
+{
+    "ClusterInfo": {
+        "BrokerNodeGroupInfo": {
+            "BrokerAZDistribution": "DEFAULT",
+            "ClientSubnets": [
+                "subnet-04d46d3943ae5b61a",
+                "subnet-0cc6c371eeb5f1a81"
+            ],
+            "InstanceType": "kafka.t3.small",
+            "SecurityGroups": [
+                "sg-0fa946f1bc0e3b040"
+            ],
+            "StorageInfo": {
+                "EbsStorageInfo": {
+                    "VolumeSize": 2
+                }
+            }
+        },
+        "ClientAuthentication": {},
+        "ClusterArn": "arn:aws:kafka:eu-west-1:073264778734:cluster/uber-delivery/53912c5d-5c9d-44c7-974b-0a781a7668ec-6",
+        "ClusterName": "uber-delivery",
+        "CreationTime": "2021-09-23T14:30:36.109Z",
+        "CurrentBrokerSoftwareInfo": {
+            "ConfigurationArn": "arn:aws:kafka:eu-west-1:073264778734:configuration/autocreate-config/9a7f54e0-5a90-46ea-bc79-baff30611b7c-6",
+            "ConfigurationRevision": 1,
+            "KafkaVersion": "2.6.2"
+        },
+        "CurrentVersion": "K2EUQ1WTGCTBG2",
+        "EncryptionInfo": {
+            "EncryptionAtRest": {
+                "DataVolumeKMSKeyId": "arn:aws:kms:eu-west-1:073264778734:key/6b93e0e6-9701-45b3-9272-3e9992fb829f"
+            },
+            "EncryptionInTransit": {
+                "ClientBroker": "TLS_PLAINTEXT",
+                "InCluster": true
+            }
+        },
+        "EnhancedMonitoring": "DEFAULT",
+        "OpenMonitoring": {
+            "Prometheus": {
+                "JmxExporter": {
+                    "EnabledInBroker": false
+                },
+                "NodeExporter": {
+                    "EnabledInBroker": false
+                }
+            }
+        },
+        "LoggingInfo": {
+            "BrokerLogs": {
+                "CloudWatchLogs": {
+                    "Enabled": false
+                },
+                "Firehose": {
+                    "Enabled": false
+                },
+                "S3": {
+                    "Enabled": false
+                }
+            }
+        },
+        "NumberOfBrokerNodes": 2,
+        "State": "ACTIVE",
+        "Tags": {},
+        "ZookeeperConnectString": "z-2.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181,z-3.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181,z-1.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181",
+        "ZookeeperConnectStringTls": "z-2.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2182,z-3.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2182,z-1.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2182"
+    }
+}
+
+
+
+
+
+
+
+./kafka-topics.sh --zookeeper z-2.uber-delivery.dcv4e6.c6.kafka.eu-west-1.amazonaws.com:2181 --create --topic trips --partitions 1 --replication-factor 1
