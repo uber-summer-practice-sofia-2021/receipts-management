@@ -1,4 +1,4 @@
-import sqlite3
+from sqlalchemy.exc import SQLAlchemyError
 from flask import Flask, request, render_template
 import os
 
@@ -20,7 +20,7 @@ def load_template(trip_id):
       return render_template("index.html", data=newReceipt.data,receiptId=newReceipt.receiptId)
     except ValidationException:
       return "No such receipt in database."
-    except sqlite3.Error:
+    except Exception:
       return "Please try again."
   
 
@@ -50,12 +50,12 @@ def get_all_info(tripId):
     server.logger.info("Inserted into database.")
 
     #Sent Email
-    get_controller().send_email(currentReceipt)
+    get_controller().send_email(currentReceipt, server.logger)
     server.logger.info("Sent email.")
     return "Successfully Received"
-  except (ValidationException, sqlite3.IntegrityError)  as e:
+  except (ValidationException)  as e:
     return "Invalid or already existing receipt", 400
-  except sqlite3.Error as e:
+  except SQLAlchemyError as e:
     return "The receipt couldn't be inserted into the database. Please try again.", 503
   except Exception as e:
     server.logger.info(e)

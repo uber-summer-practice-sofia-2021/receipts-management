@@ -18,7 +18,7 @@ class Controller:
     def GetReuqestToOrderService(self, payload):
         return self.get_order_info.get(payload)
 
-    def send_email(self, receipt):
+    def send_email(self, receipt, logger):
         # Replace sender@example.com with your "From" address. 
         # This address must be verified.
         SENDER = 'k.dimitrov.stag.bg@gmail.com'
@@ -28,12 +28,15 @@ class Controller:
         # is still in the sandbox, this address must be verified.
         #RECIPIENT  = receipt.data['clientEmail']
         RECIPIENT = receipt.data['clientEmail']
+        logger.info(RECIPIENT)
 
         # Replace smtp_username with your Amazon SES SMTP user name.
         USERNAME_SMTP = os.environ['USERNAME_SMTP']
+        logger.info(USERNAME_SMTP)
 
         # Replace smtp_password with your Amazon SES SMTP password.
         PASSWORD_SMTP = os.environ['PASSWORD_SMTP']
+        logger.info(PASSWORD_SMTP)
 
         # (Optional) the name of a configuration set to use for this message.
         # If you comment out this line, you also need to remove or comment out
@@ -43,8 +46,8 @@ class Controller:
         # If you're using Amazon SES in an AWS Region other than US West (Oregon), 
         # replace email-smtp.us-west-2.amazonaws.com with the Amazon SES SMTP  
         # endpoint in the appropriate region.
-        HOST = "email-smtp.eu-west-3.amazonaws.com"
-        PORT = 25
+        HOST = "email-smtp.us-east-2.amazonaws.com"
+        PORT = 587
 
         # The subject line of the email.
         SUBJECT = 'Amazon SES Test (Python smtplib)'
@@ -59,28 +62,37 @@ class Controller:
         #pdf = pdfkit.from_url(render_template("index.html", data = receipt.data, receiptId = receipt.receiptId))
         BODY_HTML = render_template("email.html", data = receipt.data, receiptId = receipt.receiptId)
 
+        logger.info("Good html")
 
         # Create message container - the correct MIME type is multipart/alternative.
         msg = MIMEMultipart('alternative')
+        logger.info(1)
         msg['Subject'] = SUBJECT
+        logger.info(2)
         msg['From'] = email.utils.formataddr((SENDERNAME, SENDER))
+        logger.info(3)
         msg['To'] = RECIPIENT
+        logger.info(4)
         # Comment or delete the next line if you are not using a configuration set
         # msg.add_header('X-SES-CONFIGURATION-SET',CONFIGURATION_SET)
 
         # Record the MIME types of both parts - text/plain and text/html.
         part1 = MIMEText(BODY_TEXT, 'plain')
+        logger.info(5)
         part2 = MIMEText(BODY_HTML, 'html')
+        logger.info(6)
 
         # Attach parts into message container.
         # According to RFC 2046, the last part of a multipart message, in this case
         # the HTML message, is best and preferred.
         msg.attach(part1)
+        logger.info(7)
         msg.attach(part2)
+        logger.info(8)
 
         # Try to send the message.
-
-        try:  
+       
+        try:
             server = smtplib.SMTP(HOST, PORT)
             server.ehlo()
             server.starttls()

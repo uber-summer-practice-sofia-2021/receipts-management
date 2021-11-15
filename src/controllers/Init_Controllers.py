@@ -14,6 +14,6 @@ def get_controller():
 def get_db_controller():
     db_controller = getattr(g, '_database', None)
     if db_controller is None:
-        g._database = Database_Controller(server.config['CONFIG_PATH'] + "/db_config.json")
+        g._database = Database_Controller()
     return g._database
 
